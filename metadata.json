@@ -1,0 +1,8 @@
+{
+  "name": "Remix University of Sindh Learning Management System (LMS)",
+  "description": "MetaWave Innovations digital academic platform prototype, architectural audit, and modernization blueprint for University of Sindh LMS.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

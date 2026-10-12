@@ -1,0 +1,266 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Official University of Sindh (USindh) Emblem Color Palette */
+    --uos-navy-primary: #004b87;      /* Official Emblem Deep Sea Blue */
+    --uos-navy-syndicate: #003866;    /* Official Syndicate Midnight Navy */
+    --uos-navy-secondary: #0068b5;    /* Official Emblem Torch & Sea Cerulean Blue */
+    --uos-sky-interactive: #0082d6;   /* Active / Focus Cerulean Blue */
+    --uos-sindh-olive: #84a433;       /* Official Emblem Sindh Map Olive-Leaf Green / Gold */
+    --uos-olive-dark: #4c6418;        /* High-Contrast Accessible Text Olive */
+    --uos-palm-green: #007a33;        /* Official Emblem Palm Tree Emerald Green */
+    --uos-silver-ring: #d8dadb;       /* Official Emblem Inscription Ring Silver-Grey */
+    --uos-terracotta: #9e6338;        /* Official Emblem Minaret & Torch Terracotta Brown */
+    --uos-slate-bg: #f4f6f8;          /* Crisp Institutional Paper-Slate Background */
+    --uos-card-surface: #ffffff;      /* Pure White Card Surface */
+    --uos-border: #d8dadb;            /* Hairline Silver Border */
+    --uos-text-main: #0f172a;         /* High-Legibility Charcoal Slate */
+    --uos-text-muted: #475569;        /* Academic Subtext Slate */
+    --uos-gold-accent: #84a433;
+    --uos-emerald-safe: #007a33;      /* 75%+ Attendance & Pass Safe */
+    --uos-amber-attention: #9e6338;   /* 70-74.9% Attendance Warning */
+    --uos-rose-critical: #dc2626;     /* <70% Attendance Debarment */
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--uos-text-main);
+    background-color: var(--uos-slate-bg);
+    overflow-x: hidden;
+  }
+  
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .font-serif-academic {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+  }
+
+  .font-cinzel {
+    font-family: 'Cinzel', serif;
+  }
+
+  /* Universal Accessible Focus Rings (WCAG 2.2 AA) — Official Sindh Cerulean Blue */
+  :focus-visible {
+    outline: 2px solid #0068b5;
+    outline-offset: 2px;
+  }
+
+  /* Touch-friendly active feedback on buttons */
+  button, a, select {
+    touch-action: manipulation;
+  }
+}
+
+/* =========================================================
+   OFFICIAL UNIVERSITY OF SINDH DESIGN SYSTEM UTILITIES
+   ========================================================= */
+
+/* Primary Institutional Navy Button */
+.uos-btn-primary {
+  background-color: #004b87;
+  color: #ffffff;
+  border: 1px solid #003866;
+  font-weight: 700;
+  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 56, 102, 0.12);
+}
+.uos-btn-primary:hover {
+  background-color: #003866;
+  border-color: #002747;
+  box-shadow: 0 2px 6px rgba(0, 56, 102, 0.2);
+}
+.uos-btn-primary:active {
+  transform: scale(0.99);
+}
+
+/* Secondary Academic Silver / White Button */
+.uos-btn-secondary {
+  background-color: #ffffff;
+  color: #004b87;
+  border: 1px solid #d8dadb;
+  font-weight: 600;
+  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.uos-btn-secondary:hover {
+  background-color: #f4f6f8;
+  border-color: #0068b5;
+  color: #003866;
+}
+.uos-btn-secondary:active {
+  transform: scale(0.99);
+}
+
+/* Academic Merit & OBE Olive Button */
+.uos-btn-olive {
+  background-color: #84a433;
+  color: #ffffff;
+  border: 1px solid #6b8824;
+  font-weight: 700;
+  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(107, 136, 36, 0.15);
+}
+.uos-btn-olive:hover {
+  background-color: #718f26;
+  border-color: #59731a;
+}
+.uos-btn-olive:active {
+  transform: scale(0.99);
+}
+
+/* Standardized Institutional Form Input */
+.uos-input {
+  background-color: #ffffff;
+  border: 1px solid #d8dadb;
+  color: #0f172a;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.8125rem;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+  outline: none;
+}
+.uos-input:focus {
+  border-color: #004b87;
+  box-shadow: 0 0 0 3px rgba(0, 104, 181, 0.15);
+}
+.uos-input::placeholder {
+  color: #94a3b8;
+}
+
+/* Official Institutional Card */
+.uos-card {
+  background-color: #ffffff;
+  border: 1px solid #d8dadb;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Official Gradient Masthead (Syndicate Navy -> USindh Blue -> Cerulean) */
+.uos-masthead {
+  background: linear-gradient(135deg, #003866 0%, #004b87 55%, #0068b5 100%);
+  color: #ffffff;
+  border-bottom: 1px solid #003866;
+}
+
+/* Official Institutional Badges */
+.uos-badge-navy {
+  background-color: rgba(0, 75, 135, 0.08);
+  color: #004b87;
+  border: 1px solid rgba(0, 75, 135, 0.2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  font-weight: 700;
+  border-radius: 0.375rem;
+  padding: 0.125rem 0.5rem;
+}
+
+.uos-badge-olive {
+  background-color: #eef4e3;
+  color: #4c6418;
+  border: 1px solid rgba(132, 164, 51, 0.4);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  font-weight: 700;
+  border-radius: 0.375rem;
+  padding: 0.125rem 0.5rem;
+}
+
+.uos-badge-emerald {
+  background-color: #ecfdf5;
+  color: #007a33;
+  border: 1px solid rgba(0, 122, 51, 0.3);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  font-weight: 700;
+  border-radius: 0.375rem;
+  padding: 0.125rem 0.5rem;
+}
+
+.uos-badge-terracotta {
+  background-color: #fffbeb;
+  color: #9e6338;
+  border: 1px solid rgba(158, 99, 56, 0.3);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  font-weight: 700;
+  border-radius: 0.375rem;
+  padding: 0.125rem 0.5rem;
+}
+
+.uos-badge-crimson {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  font-weight: 700;
+  border-radius: 0.375rem;
+  padding: 0.125rem 0.5rem;
+}
+
+/* Hide scrollbars on horizontal touch pill/tab carousels while keeping smooth swipe */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Safe area bottom padding for modern mobile browsers */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0.5rem);
+}
+
+/* Accessible Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Crisp Scrollbar with Official Silver & Cerulean Accents */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #eef1f4;
+}
+::-webkit-scrollbar-thumb {
+  background: #b8c0c7;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0068b5;
+}
+
+/* Print styles for Transcripts, Examination Slips, Challans, and Audit Reports */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  @page {
+    margin: 1.5cm;
+  }
+}
