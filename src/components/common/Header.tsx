@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { UserRole } from '../../types';
 import { UniversitySeal } from './UniversitySeal';
 import { ENROLLED_COURSES } from '../../data/mockAcademicData';
@@ -13,10 +13,10 @@ import {
   Bell, 
   Search, 
   ChevronDown, 
-  ChevronLeft,
-  ChevronRight,
+  ChevronLeft, 
+  ChevronRight, 
   Menu, 
-  X,
+  X, 
   BookOpen, 
   HeartHandshake, 
   School, 
@@ -33,6 +33,7 @@ interface HeaderProps {
   onOpenNotifications: () => void;
   onOpenSearch: () => void;
   onOpenNoticeModal?: () => void;
+  onOpenModernizationDoc?: () => void;
   onToggleSidebar?: () => void;
   activeCourseCode?: string;
   onSelectCourse?: (code: string) => void;
@@ -49,6 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenNotifications,
   onOpenSearch,
   onOpenNoticeModal,
+  onOpenModernizationDoc,
   activeCourseCode,
   onSelectCourse,
   onSelectStudentTab,
@@ -58,6 +60,19 @@ export const Header: React.FC<HeaderProps> = ({
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [governanceMenuOpen, setGovernanceMenuOpen] = useState(false);
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  // Maintain precise --header-height CSS variable for smooth sticky alignment across all devices
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      if (headerRef.current) {
+        document.documentElement.style.setProperty('--header-height', `${headerRef.current.offsetHeight}px`);
+      }
+    };
+    updateHeaderHeight();
+    window.addEventListener('resize', updateHeaderHeight);
+    return () => window.removeEventListener('resize', updateHeaderHeight);
+  }, [currentRole, mobileNavOpen]);
 
   const roleConfig: Record<UserRole, { title: string; shortLabel: string; tier: string; icon: React.ReactNode }> = {
     public: {
@@ -184,7 +199,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#d8dadb] no-print shadow-2xs">
+    <header ref={headerRef} className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#d8dadb] no-print shadow-2xs">
       {/* 1. Institutional Top Utility Ribbon — Hidden on small phones (<md) to keep mobile header ultra-compact */}
       <div className="hidden md:flex bg-[#004b87] text-white text-[11px] px-4 lg:px-8 py-1.5 items-center justify-between gap-3 border-b border-[#003865]">
         <div className="flex items-center gap-2.5 flex-wrap">
@@ -314,13 +329,13 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Quick Search (40x40px touch hitbox on mobile) */}
           <button
             onClick={onOpenSearch}
-            className="min-w-[38px] min-h-[38px] sm:px-2.5 sm:py-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl border border-slate-200 transition-colors flex items-center justify-center gap-1.5 text-xs font-medium cursor-pointer"
+            className="min-w-[38px] min-h-[38px] px-2 sm:px-2.5 py-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl border border-slate-200 transition-colors flex items-center justify-center gap-1.5 text-xs font-medium cursor-pointer"
             title="Search LMS catalog & circulars (⌘K)"
             aria-label="Search"
           >
             <Search className="w-4 h-4 text-[#0068b5]" />
-            <span className="hidden sm:inline text-slate-700">Search</span>
-            <kbd className="hidden md:inline px-1 py-0.2 text-[9px] bg-slate-100 text-slate-500 border border-slate-200 rounded font-mono">⌘K</kbd>
+            <span className="hidden xl:inline text-slate-700">Search</span>
+            <kbd className="hidden 2xl:inline px-1 py-0.2 text-[9px] bg-slate-100 text-slate-500 border border-slate-200 rounded font-mono">⌘K</kbd>
           </button>
 
           {/* Notifications Bell (40x40px touch hitbox on mobile) */}
@@ -556,15 +571,36 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
+          {/* Official 9-Page Modernization Document Trigger on Mobile */}
+          <div className="pt-2 border-t border-slate-100">
+            <button
+              onClick={() => {
+                setMobileNavOpen(false);
+                if (onOpenModernizationDoc) {
+                  onOpenModernizationDoc();
+                } else {
+                  handleNavigate('architecture');
+                }
+              }}
+              className="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-[#eef4e3] hover:bg-[#e2eccf] text-[#364910] border border-[#84a433]/50 flex items-center justify-between text-xs font-bold transition-colors cursor-pointer shadow-2xs"
+            >
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-[#84a433] shrink-0" />
+                <span className="font-sans">Modernization Document (9 Pages)</span>
+              </div>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#84a433] text-white font-bold">PDF / Read</span>
+            </button>
+          </div>
+
           {/* AI Research & Sample Data Notice Trigger on Mobile */}
           {onOpenNoticeModal && (
-            <div className="pt-2 border-t border-slate-100">
+            <div className="pt-1">
               <button
                 onClick={() => {
                   setMobileNavOpen(false);
                   onOpenNoticeModal();
                 }}
-                className="w-full min-h-[40px] px-3.5 py-2 rounded-xl bg-blue-50/80 hover:bg-blue-100/80 text-[#004b87] border border-blue-200/80 flex items-center justify-between text-xs font-bold transition-colors cursor-pointer"
+                className="w-full min-h-[42px] px-3.5 py-2 rounded-xl bg-blue-50/80 hover:bg-blue-100/80 text-[#004b87] border border-blue-200/80 flex items-center justify-between text-xs font-bold transition-colors cursor-pointer"
               >
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-[#0068b5]" />
@@ -581,13 +617,13 @@ export const Header: React.FC<HeaderProps> = ({
       <div
         onTouchStart={portalSwipeHandlers.onTouchStart}
         onTouchEnd={portalSwipeHandlers.onTouchEnd}
-        className="lg:hidden bg-[#f4f6f8] border-t border-[#d8dadb] px-2.5 py-1.5 flex items-center justify-between gap-1.5 select-none no-print"
+        className="lg:hidden bg-[#f4f6f8] border-t border-[#d8dadb] px-3 py-2 flex items-center justify-between gap-2 select-none no-print shadow-2xs"
       >
         <div
           ref={portalScrollRef}
           className="flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-1 py-0.5"
         >
-          <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-400 px-1 shrink-0">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 px-1 shrink-0">
             Portals:
           </span>
           {orderedRoles.map((role) => {
@@ -597,13 +633,13 @@ export const Header: React.FC<HeaderProps> = ({
                 key={role}
                 data-nav-id={role}
                 onClick={() => handleNavigate(role)}
-                className={`min-h-[30px] px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap shrink-0 flex items-center gap-1.5 transition-all cursor-pointer ${
+                className={`min-h-[38px] px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 flex items-center gap-1.5 transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-[#004b87] text-white font-bold shadow-2xs'
+                    ? 'bg-[#004b87] text-white font-bold shadow-xs'
                     : 'bg-white text-slate-700 border border-[#d8dadb] hover:bg-slate-100'
                 }`}
               >
-                <span className="scale-90 shrink-0">{roleConfig[role].icon}</span>
+                <span className="scale-95 shrink-0">{roleConfig[role].icon}</span>
                 <span>{roleConfig[role].shortLabel}</span>
               </button>
             );
@@ -611,22 +647,22 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* 1-Tap Prev/Next Portal Step Buttons on Mobile */}
-        <div className="flex items-center gap-0.5 pl-1 border-l border-[#d8dadb] shrink-0">
+        <div className="flex items-center gap-1 pl-1.5 border-l border-[#d8dadb] shrink-0">
           <button
             onClick={() => stepPortal(-1)}
-            className="w-7 h-7 rounded-lg bg-white border border-[#d8dadb] text-[#004b87] hover:bg-slate-100 flex items-center justify-center cursor-pointer"
+            className="w-8 h-8 rounded-xl bg-white border border-[#d8dadb] text-[#004b87] hover:bg-slate-100 flex items-center justify-center cursor-pointer shadow-2xs"
             title="Previous Portal (Swipe Right)"
             aria-label="Previous Portal"
           >
-            <ChevronLeft className="w-3.5 h-3.5" />
+            <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={() => stepPortal(1)}
-            className="w-7 h-7 rounded-lg bg-white border border-[#d8dadb] text-[#004b87] hover:bg-slate-100 flex items-center justify-center cursor-pointer"
+            className="w-8 h-8 rounded-xl bg-white border border-[#d8dadb] text-[#004b87] hover:bg-slate-100 flex items-center justify-center cursor-pointer shadow-2xs"
             title="Next Portal (Swipe Left)"
             aria-label="Next Portal"
           >
-            <ChevronRight className="w-3.5 h-3.5" />
+            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>

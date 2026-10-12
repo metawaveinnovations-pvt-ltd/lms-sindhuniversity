@@ -6,15 +6,28 @@ import { UniversitySeal } from './UniversitySeal';
 interface FooterProps {
   onSelectRole: (role: UserRole) => void;
   onOpenNoticeModal?: () => void;
+  onOpenModernizationDoc?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onSelectRole, onOpenNoticeModal }) => {
+export const Footer: React.FC<FooterProps> = ({ 
+  onSelectRole, 
+  onOpenNoticeModal,
+  onOpenModernizationDoc 
+}) => {
+  const handleOpenDoc = () => {
+    if (onOpenModernizationDoc) {
+      onOpenModernizationDoc();
+    } else {
+      onSelectRole('architecture');
+    }
+  };
+
   return (
     <footer className="bg-[#031f39] text-slate-300 text-sm border-t border-[#004b87] no-print">
-      {/* Top Banner */}
-      <div className="bg-[#004b87] border-b border-[#0068b5]/40 py-6 px-4 sm:px-6 lg:px-8">
+      {/* Top Banner - Fully Responsive on Mobile, Tablet & Desktop */}
+      <div className="bg-[#004b87] border-b border-[#0068b5]/40 py-5 sm:py-6 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5 text-center md:text-left">
+          <div className="flex items-center gap-3 sm:gap-3.5 text-center md:text-left flex-col sm:flex-row">
             <div className="p-1.5 bg-white rounded-2xl border-2 border-[#d8dadb] shadow-sm shrink-0">
               <UniversitySeal size="lg" />
             </div>
@@ -31,22 +44,32 @@ export const Footer: React.FC<FooterProps> = ({ onSelectRole, onOpenNoticeModal 
             </div>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap justify-center md:justify-end">
+          <div className="flex items-center gap-2 flex-wrap justify-center md:justify-end w-full md:w-auto">
+            {/* Dedicated 9-Page Modernization Document Button */}
+            <button
+              onClick={handleOpenDoc}
+              className="min-h-[40px] px-4 py-2 bg-[#84a433] hover:bg-[#739129] active:scale-95 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-md hover:shadow-lg border border-[#c8e27b]/30"
+            >
+              <FileText className="w-4 h-4 text-[#c8e27b]" />
+              <span>Modernization Document (9 Pages)</span>
+            </button>
+
             {onOpenNoticeModal && (
               <button
                 onClick={onOpenNoticeModal}
-                className="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-[#c8e27b] hover:text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer border border-white/20"
+                className="min-h-[40px] px-3.5 py-2 bg-white/10 hover:bg-white/20 text-[#c8e27b] hover:text-white font-bold text-xs rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer border border-white/20"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[#c8e27b]" />
-                <span>LMS &amp; E-Portal Notice</span>
+                <span>LMS Notice</span>
               </button>
             )}
+
             <button
               onClick={() => onSelectRole('architecture')}
-              className="px-4 py-2 bg-[#84a433] hover:bg-[#739129] text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
+              className="min-h-[40px] px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer border border-white/15"
             >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Inspect Technical Modernization Report</span>
+              <ExternalLink className="w-3.5 h-3.5 text-slate-300" />
+              <span>Full Audit Matrix</span>
             </button>
           </div>
         </div>
@@ -102,6 +125,15 @@ export const Footer: React.FC<FooterProps> = ({ onSelectRole, onOpenNoticeModal 
           <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
             <Lock className="w-3.5 h-3.5 text-[#a3c644]" />
             <span>Unified Centralized Platform for all Teachers, Staff & Students</span>
+          </div>
+          <div className="pt-1">
+            <button
+              onClick={handleOpenDoc}
+              className="px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[#c8e27b] hover:text-white border border-[#84a433]/40 text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+            >
+              <FileText className="w-3.5 h-3.5 text-[#84a433]" />
+              <span>Read 9-Page Modernization Doc</span>
+            </button>
           </div>
         </div>
 
@@ -172,6 +204,13 @@ export const Footer: React.FC<FooterProps> = ({ onSelectRole, onOpenNoticeModal 
               <HelpCircle className="w-4 h-4 text-purple-400 shrink-0" />
               <span>NCEAC Accreditation Alignment</span>
             </div>
+            <button
+              onClick={handleOpenDoc}
+              className="flex items-center gap-2 text-left text-[#c8e27b] hover:text-white pt-1 transition-colors cursor-pointer group"
+            >
+              <FileText className="w-4 h-4 text-[#84a433] shrink-0 group-hover:scale-110 transition-transform" />
+              <span className="font-semibold underline decoration-[#84a433]/50">9-Page Architecture Whitepaper (PDF)</span>
+            </button>
           </div>
           <div className="pt-2">
             <div className="text-[11px] text-slate-500">

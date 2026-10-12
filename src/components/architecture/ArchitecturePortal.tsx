@@ -27,17 +27,19 @@ import {
   Terminal,
   Download,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  BookOpen
 } from 'lucide-react';
+import { ModernizationDocumentView } from '../modernization/ModernizationDocumentView';
 
 interface ArchitecturePortalProps {
   onSelectFinding?: (finding: AuditFinding) => void;
 }
 
 export const ArchitecturePortal: React.FC<ArchitecturePortalProps> = () => {
-  const [activeTab, setActiveTab] = useState<'summary' | 'defects' | 'architecture' | 'database' | 'api' | 'security' | 'qa' | 'dr' | 'roadmap' | 'report'>('summary');
+  const [activeTab, setActiveTab] = useState<'summary' | 'defects' | 'architecture' | 'database' | 'api' | 'security' | 'qa' | 'dr' | 'roadmap' | 'doc9page' | 'report'>('summary');
   
-  const archTabIds = ['summary', 'defects', 'architecture', 'database', 'api', 'security', 'qa', 'dr', 'roadmap', 'report'] as const;
+  const archTabIds = ['summary', 'defects', 'architecture', 'database', 'api', 'security', 'qa', 'dr', 'roadmap', 'doc9page', 'report'] as const;
   const archSwipeHandlers = useSwipeNavigation<typeof archTabIds[number]>({
     items: [...archTabIds],
     activeItem: activeTab,
@@ -115,13 +117,20 @@ export const ArchitecturePortal: React.FC<ArchitecturePortalProps> = () => {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2.5 shrink-0">
+            <button
+              onClick={() => setActiveTab('doc9page')}
+              className="px-4 py-2.5 bg-[#84a433] hover:bg-[#739129] active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer border border-[#c8e27b]/30"
+            >
+              <FileText className="w-4 h-4 text-[#c8e27b]" />
+              <span>Official 9-Page Modernization Document</span>
+            </button>
             <button
               onClick={() => setActiveTab('report')}
-              className="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2"
+              className="px-3.5 py-2.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-xl transition-colors flex items-center gap-2 border border-white/20 cursor-pointer"
             >
-              <Printer className="w-4 h-4" />
-              <span>Formal Assessment Report</span>
+              <Printer className="w-4 h-4 text-amber-300" />
+              <span>Assessment Summary</span>
             </button>
           </div>
         </div>
@@ -146,6 +155,7 @@ export const ArchitecturePortal: React.FC<ArchitecturePortalProps> = () => {
           className="flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-1"
         >
           {[
+            { id: 'doc9page', label: '9-Page Modernization Document', icon: <BookOpen className="w-4 h-4 shrink-0 text-[#84a433]" /> },
             { id: 'summary', label: 'Executive Summary', icon: <FileText className="w-4 h-4 shrink-0" /> },
             { id: 'defects', label: 'Defect Register (LMS-001–020)', icon: <AlertTriangle className="w-4 h-4 shrink-0" /> },
             { id: 'architecture', label: 'Target System Architecture', icon: <Layers className="w-4 h-4 shrink-0" /> },
@@ -163,7 +173,7 @@ export const ArchitecturePortal: React.FC<ArchitecturePortalProps> = () => {
               onClick={() => setActiveTab(tab.id as any)}
               className={`min-h-[38px] px-3.5 py-2 rounded-xl flex items-center gap-2 whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                 activeTab === tab.id
-                  ? 'bg-[#0068b5] text-white font-bold shadow-xs'
+                  ? 'bg-[#004b87] text-white font-bold shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -196,6 +206,13 @@ export const ArchitecturePortal: React.FC<ArchitecturePortalProps> = () => {
           </button>
         </div>
       </div>
+
+      {/* TAB 0: OFFICIAL 9-PAGE MODERNIZATION DOCUMENT */}
+      {activeTab === 'doc9page' && (
+        <div className="rounded-2xl overflow-hidden border border-slate-300 shadow-md">
+          <ModernizationDocumentView isModal={false} />
+        </div>
+      )}
 
       {/* TAB 1: EXECUTIVE SUMMARY */}
       {activeTab === 'summary' && (

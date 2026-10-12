@@ -17,6 +17,7 @@ import { MobileBottomNav } from './components/common/MobileBottomNav';
 import { NotificationDrawer } from './components/common/NotificationDrawer';
 import { SearchModal } from './components/common/SearchModal';
 import { PlatformNoticeModal } from './components/common/PlatformNoticeModal';
+import { ModernizationDocModal } from './components/modernization/ModernizationDocModal';
 import { PublicPortal } from './components/public/PublicPortal';
 import { VcPortal } from './components/vc/VcPortal';
 import { DeanPortal } from './components/dean/DeanPortal';
@@ -69,6 +70,9 @@ export default function App() {
     }
     return true;
   });
+
+  // Dedicated 9-Page LMS & E-Portal Modernization Document Modal
+  const [isModernizationDocOpen, setIsModernizationDocOpen] = useState<boolean>(false);
 
   // Master University Timetable & Midterm/Final Exam Schedule State (Controlled by Chairman / HOD / Dean / VC)
   const [timetableSlots, setTimetableSlots] = useState<ClassTimetableSlot[]>(INITIAL_CLASS_TIMETABLE_SLOTS);
@@ -297,6 +301,7 @@ export default function App() {
         onOpenNotifications={() => setIsNotificationOpen(true)}
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenNoticeModal={() => setIsNoticeModalOpen(true)}
+        onOpenModernizationDoc={() => setIsModernizationDocOpen(true)}
         onToggleSidebar={() => setIsMobileDrawerOpen(prev => !prev)}
         activeCourseCode={selectedCourseCode}
         onSelectCourse={handleSelectCourse}
@@ -312,7 +317,7 @@ export default function App() {
 
       {/* Main Body Area: Dynamic Responsive App Shell */}
       {currentRole === 'public' ? (
-        <main className="flex-1 pb-20 lg:pb-0">
+        <main className="flex-1 pb-24 lg:pb-0">
           <PublicPortal
             onSelectRole={(role) => {
               setCurrentRole(role);
@@ -325,7 +330,7 @@ export default function App() {
           />
         </main>
       ) : currentRole === 'architecture' ? (
-        <main className="flex-1 pb-20 lg:pb-0">
+        <main className="flex-1 pb-24 lg:pb-0">
           <ArchitecturePortal />
         </main>
       ) : (
@@ -345,12 +350,13 @@ export default function App() {
             }}
           />
 
-          {/* Mobile & Tablet 1-Tap Horizontal Swipeable Module Bar (<lg) */}
+          {/* Mobile & Tablet 1-Tap Horizontal Swipeable Module Bar (<lg) with dynamic header height adherence */}
           {activeModules.length > 0 && (
             <div
               onTouchStart={moduleSwipeHandlers.onTouchStart}
               onTouchEnd={moduleSwipeHandlers.onTouchEnd}
-              className="lg:hidden bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-2.5 py-2 flex items-center justify-between gap-1.5 sticky top-[92px] sm:top-[100px] z-30 shadow-2xs no-print select-none"
+              style={{ top: 'var(--header-height, 96px)' }}
+              className="lg:hidden bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-2.5 py-2 flex items-center justify-between gap-1.5 sticky z-30 shadow-2xs no-print select-none"
             >
               <div
                 ref={moduleBarScrollRef}
@@ -416,7 +422,7 @@ export default function App() {
           <main
             onTouchStart={moduleSwipeHandlers.onTouchStart}
             onTouchEnd={moduleSwipeHandlers.onTouchEnd}
-            className="flex-1 overflow-y-auto pb-20 lg:pb-0"
+            className="flex-1 overflow-y-auto pb-24 lg:pb-0"
           >
             {currentRole === 'vc' && (
               <VcPortal
@@ -559,6 +565,7 @@ export default function App() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }} 
         onOpenNoticeModal={() => setIsNoticeModalOpen(true)}
+        onOpenModernizationDoc={() => setIsModernizationDocOpen(true)}
       />
 
       {/* High-frequency Mobile Bottom Navigation (Active on all views on mobile) */}
@@ -704,6 +711,16 @@ export default function App() {
         isOpen={isNoticeModalOpen}
         onClose={() => setIsNoticeModalOpen(false)}
         onOpenArchitecture={() => {
+          setCurrentRole('architecture');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+      />
+
+      {/* Official 9-Page LMS & E-Portal Modernization Document Modal */}
+      <ModernizationDocModal
+        isOpen={isModernizationDocOpen}
+        onClose={() => setIsModernizationDocOpen(false)}
+        onNavigateToArchitecture={() => {
           setCurrentRole('architecture');
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
