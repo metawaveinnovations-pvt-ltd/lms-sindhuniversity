@@ -27,8 +27,8 @@ import { HodPortal } from './components/hod/HodPortal';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { ParentPortal } from './components/parent/ParentPortal';
 import { ArchitecturePortal } from './components/architecture/ArchitecturePortal';
-import { useSwipeNavigation, useAutoScrollActivePill } from './hooks/useSwipeNavigation';
-import { X, Home, ChevronLeft, ChevronRight, ArrowLeftRight } from 'lucide-react';
+import { useSwipeNavigation } from './hooks/useSwipeNavigation';
+import { X, ArrowLeftRight } from 'lucide-react';
 
 export default function App() {
   const [currentRole, setCurrentRole] = useState<UserRole>('public');
@@ -271,22 +271,6 @@ export default function App() {
     }
   });
 
-  // Auto-scroll active module pill into horizontal center
-  const moduleBarScrollRef = useAutoScrollActivePill(currentActiveTab);
-
-  // Step through module tabs via < / > buttons
-  const stepModuleTab = (dir: -1 | 1) => {
-    if (activeModuleIds.length < 2) return;
-    const idx = activeModuleIds.indexOf(currentActiveTab);
-    const nextIdx = (idx + dir + activeModuleIds.length) % activeModuleIds.length;
-    const nextId = activeModuleIds[nextIdx];
-    handleTabChange(nextId);
-    const targetMod = activeModules.find(m => m.id === nextId);
-    if (targetMod) {
-      showSwipeToast(`Switched to ${targetMod.label}`);
-    }
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-[#f4f6f8] text-slate-900 font-sans">
       {/* Universal Institutional Header */}
@@ -335,7 +319,7 @@ export default function App() {
         </main>
       ) : (
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-          {/* Collapsible Desktop Enterprise Sidebar */}
+          {/* Collapsible Desktop Enterprise Sidebar & Mobile Slide-Over Sidebar */}
           <AppSidebar
             currentRole={currentRole}
             activeTab={currentActiveTab}
@@ -343,80 +327,15 @@ export default function App() {
             onTabChange={handleTabChange}
             isCollapsed={isSidebarCollapsed}
             onToggleCollapse={() => setIsSidebarCollapsed(prev => !prev)}
+            isMobileOpen={isMobileDrawerOpen}
+            onCloseMobile={() => setIsMobileDrawerOpen(false)}
             onSelectRole={(role) => {
               setCurrentRole(role);
               setActiveSubTab('');
+              setIsMobileDrawerOpen(false);
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           />
-
-          {/* Mobile & Tablet 1-Tap Horizontal Swipeable Module Bar (<lg) with dynamic header height adherence */}
-          {activeModules.length > 0 && (
-            <div
-              onTouchStart={moduleSwipeHandlers.onTouchStart}
-              onTouchEnd={moduleSwipeHandlers.onTouchEnd}
-              style={{ top: 'var(--header-height, 96px)' }}
-              className="lg:hidden bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-2.5 py-2 flex items-center justify-between gap-1.5 sticky z-30 shadow-2xs no-print select-none"
-            >
-              <div
-                ref={moduleBarScrollRef}
-                className="flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-1"
-              >
-                <button
-                  onClick={() => {
-                    setCurrentRole('public');
-                    setActiveSubTab('');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="min-h-[36px] px-2.5 py-1.5 rounded-xl bg-slate-100 text-[#004b87] border border-slate-200/80 text-xs font-bold flex items-center gap-1 shrink-0 cursor-pointer"
-                  title="Return to Portal Home"
-                >
-                  <Home className="w-3.5 h-3.5 text-[#0068b5]" />
-                </button>
-                {activeModules.map((mod) => {
-                  const isSelected = currentActiveTab === mod.id;
-                  return (
-                    <button
-                      key={mod.id}
-                      data-nav-id={mod.id}
-                      onClick={() => handleTabChange(mod.id)}
-                      className={`min-h-[36px] px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
-                        isSelected
-                          ? 'bg-[#004b87] text-white font-bold shadow-xs'
-                          : 'bg-slate-100/80 text-slate-700 hover:bg-slate-200/70 border border-slate-200/70'
-                      }`}
-                    >
-                      {mod.label}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Prev / Next Tab Step Controls + Swipe Indicator */}
-              <div className="flex items-center gap-1 pl-1.5 border-l border-slate-200 shrink-0">
-                <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono text-slate-400 px-1.5">
-                  <ArrowLeftRight className="w-3 h-3 text-[#0068b5]" />
-                  <span>Swipe</span>
-                </span>
-                <button
-                  onClick={() => stepModuleTab(-1)}
-                  className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200/80 text-[#004b87] hover:bg-slate-200/70 flex items-center justify-center cursor-pointer"
-                  title="Previous Module Tab (Swipe Right)"
-                  aria-label="Previous Module Tab"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => stepModuleTab(1)}
-                  className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200/80 text-[#004b87] hover:bg-slate-200/70 flex items-center justify-center cursor-pointer"
-                  title="Next Module Tab (Swipe Left)"
-                  aria-label="Next Module Tab"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
 
           {/* Persona Main Viewport (Supports Horizontal Swipe-Left / Swipe-Right Between Tabs on Mobile) */}
           <main
@@ -589,8 +508,8 @@ export default function App() {
         </div>
       )}
 
-      {/* Slide-out Mobile Navigation Drawer */}
-      {isMobileDrawerOpen && (
+      {/* Slide-out Mobile Navigation Drawer (For Public & Architecture Pages) */}
+      {isMobileDrawerOpen && (currentRole === 'public' || currentRole === 'architecture') && (
         <div className="fixed inset-0 z-50 flex justify-start bg-slate-900/50 backdrop-blur-xs lg:hidden animate-in fade-in">
           <div className="w-80 max-w-[85vw] bg-white h-full shadow-2xl flex flex-col border-r border-slate-200 animate-in slide-in-from-left">
             <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-[#004b87] text-white">

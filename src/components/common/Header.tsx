@@ -13,8 +13,6 @@ import {
   Bell, 
   Search, 
   ChevronDown, 
-  ChevronLeft, 
-  ChevronRight, 
   Menu, 
   X, 
   BookOpen, 
@@ -51,6 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSearch,
   onOpenNoticeModal,
   onOpenModernizationDoc,
+  onToggleSidebar,
   activeCourseCode,
   onSelectCourse,
   onSelectStudentTab,
@@ -159,15 +158,6 @@ export const Header: React.FC<HeaderProps> = ({
     setRoleMenuOpen(false);
   };
 
-  // Swipe left/right on Mobile Portal Switcher ribbon
-  const portalSwipeHandlers = useSwipeNavigation<UserRole>({
-    items: orderedRoles,
-    activeItem: currentRole,
-    onSelect: handleNavigate,
-    minSwipeDistance: 40
-  });
-  const portalScrollRef = useAutoScrollActivePill(currentRole);
-
   // Swipe left/right on Student Courses Quick-Jump ribbon
   const courseCodes = ENROLLED_COURSES.map(c => c.code);
   const courseSwipeHandlers = useSwipeNavigation<string>({
@@ -179,12 +169,6 @@ export const Header: React.FC<HeaderProps> = ({
     minSwipeDistance: 40
   });
   const courseScrollRef = useAutoScrollActivePill(activeCourseCode || courseCodes[0]);
-
-  const stepPortal = (dir: -1 | 1) => {
-    const idx = orderedRoles.indexOf(currentRole);
-    const nextIdx = (idx + dir + orderedRoles.length) % orderedRoles.length;
-    handleNavigate(orderedRoles[nextIdx]);
-  };
 
   const handleAdmissionsClick = () => {
     if (currentRole !== 'public') {
@@ -437,6 +421,23 @@ export const Header: React.FC<HeaderProps> = ({
       {/* 3. Mobile Responsive Quick-Access Sheet */}
       {mobileNavOpen && (
         <div className="md:hidden bg-white border-b-2 border-[#0068b5] px-4 py-4 space-y-4 shadow-2xl max-h-[80vh] overflow-y-auto animate-in slide-in-from-top-2 duration-150">
+          {/* Direct Sidebar Drawer Slider Toggler */}
+          {currentRole !== 'public' && onToggleSidebar && (
+            <button
+              onClick={() => {
+                setMobileNavOpen(false);
+                onToggleSidebar();
+              }}
+              className="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-[#004b87] text-white hover:bg-[#003866] flex items-center justify-between text-xs font-bold transition-all shadow-xs cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <Menu className="w-4 h-4 text-[#c8e27b]" />
+                <span>Open {currentRole.toUpperCase()} Navigation Sidebar</span>
+              </div>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-white/20 font-mono">Slider</span>
+            </button>
+          )}
+
           {/* Quick Search on Mobile Sheet */}
           <button
             onClick={() => {
@@ -629,59 +630,6 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       )}
 
-      {/* 3.5 Mobile & Tablet Horizontal Portal Switcher Bar with Swipe-Left / Swipe-Right Gestures */}
-      <div
-        onTouchStart={portalSwipeHandlers.onTouchStart}
-        onTouchEnd={portalSwipeHandlers.onTouchEnd}
-        className="md:hidden bg-[#f4f6f8] border-t border-[#d8dadb] px-3 py-2 flex items-center justify-between gap-2 select-none no-print shadow-2xs"
-      >
-        <div
-          ref={portalScrollRef}
-          className="flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-1 py-0.5"
-        >
-          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 px-1 shrink-0">
-            Portals:
-          </span>
-          {orderedRoles.map((role) => {
-            const isSelected = currentRole === role;
-            return (
-              <button
-                key={role}
-                data-nav-id={role}
-                onClick={() => handleNavigate(role)}
-                className={`min-h-[38px] px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 flex items-center gap-1.5 transition-all cursor-pointer ${
-                  isSelected
-                    ? 'bg-[#004b87] text-white font-bold shadow-xs'
-                    : 'bg-white text-slate-700 border border-[#d8dadb] hover:bg-slate-100'
-                }`}
-              >
-                <span className="scale-95 shrink-0">{roleConfig[role].icon}</span>
-                <span>{roleConfig[role].shortLabel}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* 1-Tap Prev/Next Portal Step Buttons on Mobile */}
-        <div className="flex items-center gap-1 pl-1.5 border-l border-[#d8dadb] shrink-0">
-          <button
-            onClick={() => stepPortal(-1)}
-            className="w-8 h-8 rounded-xl bg-white border border-[#d8dadb] text-[#004b87] hover:bg-slate-100 flex items-center justify-center cursor-pointer shadow-2xs"
-            title="Previous Portal (Swipe Right)"
-            aria-label="Previous Portal"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => stepPortal(1)}
-            className="w-8 h-8 rounded-xl bg-white border border-[#d8dadb] text-[#004b87] hover:bg-slate-100 flex items-center justify-center cursor-pointer shadow-2xs"
-            title="Next Portal (Swipe Left)"
-            aria-label="Next Portal"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
 
       {/* 4. Persistent Course Sites Quick-Jump Ribbon (When inside Student — Desktop & Tablet md+) */}
       {currentRole === 'student' && (

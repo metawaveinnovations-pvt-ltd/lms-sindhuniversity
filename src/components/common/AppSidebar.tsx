@@ -24,8 +24,11 @@ import {
   FolderGit2,
   Sparkles,
   HelpCircle,
-  Home
+  Home,
+  X,
+  PanelLeft
 } from 'lucide-react';
+import { UniversitySeal } from './UniversitySeal';
 
 export interface NavSubLink {
   id: string;
@@ -53,6 +56,8 @@ interface AppSidebarProps {
   isCollapsed: boolean;
   onToggleCollapse: () => void;
   onSelectRole: (role: UserRole) => void;
+  isMobileOpen?: boolean;
+  onCloseMobile?: () => void;
 }
 
 export const AppSidebar: React.FC<AppSidebarProps> = ({
@@ -62,7 +67,9 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   onTabChange,
   isCollapsed,
   onToggleCollapse,
-  onSelectRole
+  onSelectRole,
+  isMobileOpen = false,
+  onCloseMobile
 }) => {
   // Navigation structure tailored to each persona with direct sub-links where beneficial
   const getNavSections = (): NavSection[] => {
@@ -462,155 +469,322 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   const sections = getNavSections();
 
   return (
-    <aside 
-      className={`hidden lg:flex flex-col bg-white border-r border-slate-200 transition-all duration-200 z-30 shrink-0 select-none ${
-        isCollapsed ? 'w-16' : 'w-64'
-      }`}
-    >
-      {/* Top Sidebar Header with Role Status & Collapse button */}
-      <div className="h-14 flex items-center justify-between px-3 border-b border-[#d8dadb] bg-[#f4f6f8]">
-        {!isCollapsed && (
-          <div className="flex items-center gap-2 overflow-hidden min-w-0">
-            <span className="w-2 h-2 rounded-full bg-[#84a433] shrink-0" />
-            <div className="truncate">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-[#004b87] leading-tight">
-                {currentRole === 'chairman' ? 'CHAIRMAN DESK' : `${currentRole.toUpperCase()} WORKSPACE`}
+    <>
+      {/* 1. Desktop Persistent Enterprise Sidebar */}
+      <aside 
+        className={`hidden lg:flex flex-col bg-white border-r border-slate-200 transition-all duration-200 z-30 shrink-0 select-none ${
+          isCollapsed ? 'w-16' : 'w-64'
+        }`}
+      >
+        {/* Top Sidebar Header with Role Status & Collapse button */}
+        <div className="h-14 flex items-center justify-between px-3 border-b border-[#d8dadb] bg-[#f4f6f8]">
+          {!isCollapsed && (
+            <div className="flex items-center gap-2 overflow-hidden min-w-0">
+              <span className="w-2 h-2 rounded-full bg-[#84a433] shrink-0" />
+              <div className="truncate">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[#004b87] leading-tight">
+                  {currentRole === 'chairman' ? 'CHAIRMAN DESK' : `${currentRole.toUpperCase()} WORKSPACE`}
+                </div>
+                <div className="text-[9px] text-slate-500 font-mono">UOS Allama II Qazi</div>
               </div>
-              <div className="text-[9px] text-slate-500 font-mono">UOS Allama II Qazi</div>
             </div>
-          </div>
-        )}
-        <button
-          onClick={onToggleCollapse}
-          className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors mx-auto cursor-pointer"
-          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-        </button>
-      </div>
+          )}
+          <button
+            onClick={onToggleCollapse}
+            className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors mx-auto cursor-pointer"
+            title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          </button>
+        </div>
 
-      {/* Main Navigation Sections */}
-      <div className="flex-1 overflow-y-auto py-3 px-2 space-y-4">
-        {sections.map((sec, secIdx) => (
-          <div key={secIdx} className="space-y-1">
-            {!isCollapsed && (
-              <div className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                {sec.heading}
-              </div>
-            )}
-            <div className="space-y-0.5">
-              {sec.items.map((item) => {
-                const isActive = activeTab === item.id;
-                const hasSubLinks = item.subLinks && item.subLinks.length > 0;
+        {/* Main Navigation Sections */}
+        <div className="flex-1 overflow-y-auto py-3 px-2 space-y-4">
+          {sections.map((sec, secIdx) => (
+            <div key={secIdx} className="space-y-1">
+              {!isCollapsed && (
+                <div className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  {sec.heading}
+                </div>
+              )}
+              <div className="space-y-0.5">
+                {sec.items.map((item) => {
+                  const isActive = activeTab === item.id;
+                  const hasSubLinks = item.subLinks && item.subLinks.length > 0;
 
-                return (
-                  <div key={item.id} className="space-y-0.5">
-                    <button
-                      onClick={() => onTabChange(item.id)}
-                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer group ${
-                        isActive
-                          ? 'bg-[#004b87] text-white font-bold shadow-2xs'
-                          : 'text-slate-700 hover:text-[#004b87] hover:bg-slate-100/90'
-                      }`}
-                      title={isCollapsed ? item.label : undefined}
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <span className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-[#004b87]'}`}>
-                          {item.icon}
-                        </span>
-                        {!isCollapsed && <span className="truncate">{item.label}</span>}
-                      </div>
+                  return (
+                    <div key={item.id} className="space-y-0.5">
+                      <button
+                        onClick={() => onTabChange(item.id)}
+                        className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer group ${
+                          isActive
+                            ? 'bg-[#004b87] text-white font-bold shadow-2xs'
+                            : 'text-slate-700 hover:text-[#004b87] hover:bg-slate-100/90'
+                        }`}
+                        title={isCollapsed ? item.label : undefined}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <span className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-[#004b87]'}`}>
+                            {item.icon}
+                          </span>
+                          {!isCollapsed && <span className="truncate">{item.label}</span>}
+                        </div>
 
-                      {!isCollapsed && (
-                        <div className="flex items-center gap-1.5 shrink-0">
-                          {item.badge && (
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold font-mono ${
-                              item.badge.includes('Risk')
-                                ? 'bg-rose-100 text-rose-800'
-                                : isActive 
-                                  ? 'bg-white/20 text-white' 
-                                  : 'bg-[#eef4e3] text-[#4c6418]'
-                            }`}>
-                              {item.badge}
-                            </span>
-                          )}
-                          {hasSubLinks && (
-                            <ChevronDown className={`w-3 h-3 transition-transform ${
-                              isActive ? 'rotate-180 text-white/70' : 'text-slate-400 group-hover:text-slate-600'
-                            }`} />
-                          )}
+                        {!isCollapsed && (
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {item.badge && (
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold font-mono ${
+                                item.badge.includes('Risk')
+                                  ? 'bg-rose-100 text-rose-800'
+                                  : isActive 
+                                    ? 'bg-white/20 text-white' 
+                                    : 'bg-[#eef4e3] text-[#4c6418]'
+                              }`}>
+                                {item.badge}
+                              </span>
+                            )}
+                            {hasSubLinks && (
+                              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${
+                                isActive ? 'rotate-180 text-white/70' : 'text-slate-400 group-hover:text-slate-600'
+                              }`} />
+                            )}
+                          </div>
+                        )}
+                      </button>
+
+                      {/* Direct Sub-links for active item */}
+                      {!isCollapsed && hasSubLinks && isActive && (
+                        <div className="pl-5 pr-1 py-1 space-y-1 border-l-2 border-[#0068b5]/30 ml-4 animate-in fade-in duration-150">
+                          {item.subLinks!.map((sub, sIdx) => {
+                            const isSubActive = activeSubTab ? activeSubTab === sub.id : sIdx === 0;
+                            return (
+                              <button
+                                key={sub.id}
+                                onClick={() => onTabChange(item.id, sub.id)}
+                                className={`w-full text-left px-2.5 py-1.5 rounded-lg text-[11px] transition-all flex items-center justify-between gap-1.5 group cursor-pointer ${
+                                  isSubActive
+                                    ? 'bg-[#0068b5]/10 text-[#004b87] font-bold border border-[#0068b5]/20'
+                                    : 'text-slate-600 hover:text-[#004b87] hover:bg-slate-100/80 font-medium'
+                                }`}
+                              >
+                                <div className="flex items-center gap-1.5 min-w-0">
+                                  <span
+                                    className={`w-1.5 h-1.5 rounded-full transition-colors shrink-0 ${
+                                      isSubActive ? 'bg-[#84a433]' : 'bg-slate-300 group-hover:bg-[#0068b5]'
+                                    }`}
+                                  />
+                                  <span className="truncate">{sub.label}</span>
+                                </div>
+                              </button>
+                            );
+                          })}
                         </div>
                       )}
-                    </button>
-
-                    {/* Direct Sub-links for active item */}
-                    {!isCollapsed && hasSubLinks && isActive && (
-                      <div className="pl-5 pr-1 py-1 space-y-1 border-l-2 border-[#0068b5]/30 ml-4 animate-in fade-in duration-150">
-                        {item.subLinks!.map((sub, sIdx) => {
-                          const isSubActive = activeSubTab ? activeSubTab === sub.id : sIdx === 0;
-                          return (
-                            <button
-                              key={sub.id}
-                              onClick={() => onTabChange(item.id, sub.id)}
-                              className={`w-full text-left px-2.5 py-1.5 rounded-lg text-[11px] transition-all flex items-center justify-between gap-1.5 group cursor-pointer ${
-                                isSubActive
-                                  ? 'bg-[#0068b5]/10 text-[#004b87] font-bold border border-[#0068b5]/20'
-                                  : 'text-slate-600 hover:text-[#004b87] hover:bg-slate-100/80 font-medium'
-                              }`}
-                            >
-                              <div className="flex items-center gap-1.5 min-w-0">
-                                <span
-                                  className={`w-1.5 h-1.5 rounded-full transition-colors shrink-0 ${
-                                    isSubActive ? 'bg-[#84a433]' : 'bg-slate-300 group-hover:bg-[#0068b5]'
-                                  }`}
-                                />
-                                <span className="truncate">{sub.label}</span>
-                              </div>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Bottom Actions: Public Portal Return & Technical Blueprint */}
-      <div className="p-2 border-t border-slate-200 bg-slate-50/80 space-y-1">
-        <button
-          onClick={() => onSelectRole('public')}
-          className={`w-full flex items-center gap-2 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:text-[#0b2545] hover:bg-white border border-slate-200 transition-colors cursor-pointer ${
-            isCollapsed ? 'justify-center' : 'justify-start'
-          }`}
-          title="Return to Public E-Portal & Admissions Gateway"
-        >
-          <Home className="w-4 h-4 text-slate-600 shrink-0" />
-          {!isCollapsed && <span className="truncate">Public LMS Gateway</span>}
-        </button>
+        {/* Bottom Actions: Public Portal Return & Technical Blueprint */}
+        <div className="p-2 border-t border-slate-200 bg-slate-50/80 space-y-1">
+          <button
+            onClick={() => onSelectRole('public')}
+            className={`w-full flex items-center gap-2 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:text-[#0b2545] hover:bg-white border border-slate-200 transition-colors cursor-pointer ${
+              isCollapsed ? 'justify-center' : 'justify-start'
+            }`}
+            title="Return to Public E-Portal & Admissions Gateway"
+          >
+            <Home className="w-4 h-4 text-slate-600 shrink-0" />
+            {!isCollapsed && <span className="truncate">Public LMS Gateway</span>}
+          </button>
 
-        <button
-          onClick={() => onSelectRole('architecture')}
-          className={`w-full flex items-center gap-2 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-white border border-slate-200 transition-colors cursor-pointer ${
-            isCollapsed ? 'justify-center' : 'justify-between'
-          }`}
-          title="Audit & Technical Architecture"
-        >
-          <div className="flex items-center gap-2 overflow-hidden">
-            <FolderGit2 className="w-4 h-4 text-amber-700 shrink-0" />
-            {!isCollapsed && <span className="truncate">System Architecture</span>}
-          </div>
-          {!isCollapsed && (
-            <span className="text-[10px] bg-slate-200 text-slate-800 px-1.5 py-0.2 rounded font-mono font-bold shrink-0">
-              UOS-20
-            </span>
-          )}
-        </button>
-      </div>
-    </aside>
+          <button
+            onClick={() => onSelectRole('architecture')}
+            className={`w-full flex items-center gap-2 p-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-white border border-slate-200 transition-colors cursor-pointer ${
+              isCollapsed ? 'justify-center' : 'justify-between'
+            }`}
+            title="Audit & Technical Architecture"
+          >
+            <div className="flex items-center gap-2 overflow-hidden">
+              <FolderGit2 className="w-4 h-4 text-amber-700 shrink-0" />
+              {!isCollapsed && <span className="truncate">System Architecture</span>}
+            </div>
+            {!isCollapsed && (
+              <span className="text-[10px] bg-slate-200 text-slate-800 px-1.5 py-0.2 rounded font-mono font-bold shrink-0">
+                UOS-20
+              </span>
+            )}
+          </button>
+        </div>
+      </aside>
+
+      {/* 2. Mobile & Tablet Slider Drawer from Left Side */}
+      {isMobileOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          {/* Backdrop overlay */}
+          <div
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
+            onClick={onCloseMobile}
+            aria-label="Close sidebar overlay"
+          />
+
+          {/* Slide-over Container from Left */}
+          <aside
+            className="relative z-50 w-72 sm:w-80 max-w-[85vw] h-full bg-white shadow-2xl flex flex-col border-r border-slate-200 animate-in slide-in-from-left duration-250 select-none"
+            aria-label="Mobile Navigation Sidebar"
+          >
+            {/* Mobile Header with Role Status & Close Button */}
+            <div className="h-16 flex items-center justify-between px-3.5 border-b border-[#d8dadb] bg-[#004b87] text-white shrink-0">
+              <div className="flex items-center gap-2.5 overflow-hidden min-w-0">
+                <div className="p-1 bg-white rounded-xl border border-white/20 shrink-0 shadow-xs">
+                  <UniversitySeal size="sm" />
+                </div>
+                <div className="truncate">
+                  <div className="text-xs font-bold uppercase tracking-wider text-white leading-tight">
+                    {currentRole === 'chairman' ? 'CHAIRMAN DESK' : `${currentRole.toUpperCase()} WORKSPACE`}
+                  </div>
+                  <div className="text-[10px] text-[#c8e27b] font-mono truncate">University of Sindh LMS</div>
+                </div>
+              </div>
+              <button
+                onClick={onCloseMobile}
+                className="min-w-[36px] min-h-[36px] p-1.5 rounded-xl text-white/80 hover:text-white hover:bg-white/15 transition-colors flex items-center justify-center cursor-pointer ml-1 shrink-0"
+                aria-label="Close navigation sidebar"
+                title="Close sidebar"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Mobile Navigation List - EXACT SAME SECTIONS, ICONS, BADGES, AND SUBLINKS */}
+            <div className="flex-1 overflow-y-auto py-3 px-2.5 space-y-4">
+              {sections.map((sec, secIdx) => (
+                <div key={secIdx} className="space-y-1">
+                  <div className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
+                    {sec.heading}
+                  </div>
+                  <div className="space-y-0.5">
+                    {sec.items.map((item) => {
+                      const isActive = activeTab === item.id;
+                      const hasSubLinks = item.subLinks && item.subLinks.length > 0;
+
+                      return (
+                        <div key={item.id} className="space-y-0.5">
+                          <button
+                            onClick={() => {
+                              onTabChange(item.id);
+                              onCloseMobile?.();
+                            }}
+                            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-colors cursor-pointer group ${
+                              isActive
+                                ? 'bg-[#004b87] text-white font-bold shadow-2xs'
+                                : 'text-slate-700 hover:text-[#004b87] hover:bg-slate-100/90'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <span className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-[#004b87]'}`}>
+                                {item.icon}
+                              </span>
+                              <span className="truncate">{item.label}</span>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              {item.badge && (
+                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold font-mono ${
+                                  item.badge.includes('Risk')
+                                    ? 'bg-rose-100 text-rose-800'
+                                    : isActive 
+                                      ? 'bg-white/20 text-white' 
+                                      : 'bg-[#eef4e3] text-[#4c6418]'
+                                }`}>
+                                  {item.badge}
+                                </span>
+                              )}
+                              {hasSubLinks && (
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${
+                                  isActive ? 'rotate-180 text-white/70' : 'text-slate-400 group-hover:text-slate-600'
+                                }`} />
+                              )}
+                            </div>
+                          </button>
+
+                          {/* Direct Sub-links for active item */}
+                          {hasSubLinks && isActive && (
+                            <div className="pl-5 pr-1 py-1 space-y-1 border-l-2 border-[#0068b5]/30 ml-4 animate-in fade-in duration-150">
+                              {item.subLinks!.map((sub, sIdx) => {
+                                const isSubActive = activeSubTab ? activeSubTab === sub.id : sIdx === 0;
+                                return (
+                                  <button
+                                    key={sub.id}
+                                    onClick={() => {
+                                      onTabChange(item.id, sub.id);
+                                      onCloseMobile?.();
+                                    }}
+                                    className={`w-full text-left px-2.5 py-2 rounded-lg text-xs transition-all flex items-center justify-between gap-1.5 group cursor-pointer ${
+                                      isSubActive
+                                        ? 'bg-[#0068b5]/10 text-[#004b87] font-bold border border-[#0068b5]/20'
+                                        : 'text-slate-600 hover:text-[#004b87] hover:bg-slate-100/80 font-medium'
+                                    }`}
+                                  >
+                                    <div className="flex items-center gap-1.5 min-w-0">
+                                      <span
+                                        className={`w-1.5 h-1.5 rounded-full transition-colors shrink-0 ${
+                                          isSubActive ? 'bg-[#84a433]' : 'bg-slate-300 group-hover:bg-[#0068b5]'
+                                        }`}
+                                      />
+                                      <span className="truncate">{sub.label}</span>
+                                    </div>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Bottom Actions: Public Portal Return & Technical Blueprint */}
+            <div className="p-2.5 border-t border-slate-200 bg-slate-50 space-y-1.5 shrink-0">
+              <button
+                onClick={() => {
+                  onSelectRole('public');
+                  onCloseMobile?.();
+                }}
+                className="w-full flex items-center gap-2 p-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#0b2545] hover:bg-white border border-slate-200 transition-colors cursor-pointer"
+                title="Return to Public E-Portal & Admissions Gateway"
+              >
+                <Home className="w-4 h-4 text-slate-600 shrink-0" />
+                <span className="truncate">Public LMS Gateway</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  onSelectRole('architecture');
+                  onCloseMobile?.();
+                }}
+                className="w-full flex items-center justify-between gap-2 p-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-white border border-slate-200 transition-colors cursor-pointer"
+                title="Audit & Technical Architecture"
+              >
+                <div className="flex items-center gap-2 overflow-hidden">
+                  <FolderGit2 className="w-4 h-4 text-amber-700 shrink-0" />
+                  <span className="truncate">System Architecture</span>
+                </div>
+                <span className="text-[10px] bg-slate-200 text-slate-800 px-1.5 py-0.2 rounded font-mono font-bold shrink-0">
+                  UOS-20
+                </span>
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
+    </>
   );
 };
