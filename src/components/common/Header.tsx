@@ -276,11 +276,11 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Center: Global Master Navigation Tabs (Desktop) */}
-        <nav aria-label="Global Academic Navigation" className="hidden lg:flex items-center gap-1 bg-[#e8ecef] p-1 rounded-xl border border-[#d8dadb] text-xs font-semibold shrink-0">
+        {/* Center: Global Master Navigation Tabs (Responsive: md through 2xl) */}
+        <nav aria-label="Global Academic Navigation" className="hidden md:flex items-center gap-0.5 lg:gap-1 bg-[#e8ecef] p-1 rounded-xl border border-[#d8dadb] text-[11px] lg:text-xs font-semibold shrink-0">
           <button
             onClick={() => handleNavigate('public')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+            className={`px-2.5 lg:px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentRole === 'public'
                 ? 'bg-[#004b87] text-white shadow-xs font-bold'
                 : 'text-slate-700 hover:text-[#004b87] hover:bg-white/80'
@@ -292,7 +292,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={() => handleNavigate('student')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+            className={`px-2.5 lg:px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentRole === 'student'
                 ? 'bg-[#004b87] text-white shadow-xs font-bold'
                 : 'text-slate-700 hover:text-[#004b87] hover:bg-white/80'
@@ -304,7 +304,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={() => handleNavigate('faculty')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+            className={`px-2.5 lg:px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               currentRole === 'faculty'
                 ? 'bg-[#004b87] text-white shadow-xs font-bold'
                 : 'text-slate-700 hover:text-[#004b87] hover:bg-white/80'
@@ -316,20 +316,20 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={handleAdmissionsClick}
-            className="px-3 py-1.5 rounded-lg text-slate-700 hover:text-[#004b87] hover:bg-white/80 transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap font-medium"
+            className="px-2.5 lg:px-3 py-1.5 rounded-lg text-slate-700 hover:text-[#004b87] hover:bg-white/80 transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap font-medium"
           >
             <CheckCircle2 className="w-3.5 h-3.5 text-[#007a33]" />
             <span>Admissions</span>
-            <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-[#eef4e3] text-[#4c6418] border border-[#84a433]/40 font-bold">2026</span>
+            <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-[#eef4e3] text-[#4c6418] border border-[#84a433]/40 font-bold hidden lg:inline">2026</span>
           </button>
         </nav>
 
-        {/* Right: Touch-Friendly Utilities (Search, Alerts, Governance & Portals Dropdown & Mobile Menu) */}
+        {/* Right: Touch-Friendly Utilities (On Mob: Notification Bell + Menu Toggler; On md+: Search, Bell, Governance & Portals) */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* Quick Search (40x40px touch hitbox on mobile) */}
+          {/* Quick Search (Hidden on mob screen, available on md+ and inside mobile drawer) */}
           <button
             onClick={onOpenSearch}
-            className="min-w-[38px] min-h-[38px] px-2 sm:px-2.5 py-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl border border-slate-200 transition-colors flex items-center justify-center gap-1.5 text-xs font-medium cursor-pointer"
+            className="hidden md:flex min-w-[38px] min-h-[38px] px-2.5 py-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl border border-slate-200 transition-colors items-center justify-center gap-1.5 text-xs font-medium cursor-pointer"
             title="Search LMS catalog & circulars (⌘K)"
             aria-label="Search"
           >
@@ -338,7 +338,7 @@ export const Header: React.FC<HeaderProps> = ({
             <kbd className="hidden 2xl:inline px-1 py-0.2 text-[9px] bg-slate-100 text-slate-500 border border-slate-200 rounded font-mono">⌘K</kbd>
           </button>
 
-          {/* Notifications Bell (40x40px touch hitbox on mobile) */}
+          {/* Notifications Bell (Always visible: Mob screen, Tablet, Laptop, Desktop) */}
           <button
             onClick={onOpenNotifications}
             className="min-w-[38px] min-h-[38px] p-2 relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl border border-slate-200 transition-colors flex items-center justify-center cursor-pointer"
@@ -353,12 +353,12 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </button>
 
-          {/* Governance & Portals Dropdown Button (Prominently placed at the end of the navigation header) */}
-          <div className="relative">
+          {/* Governance & Portals Dropdown Button (Hidden on mob screen, prominent on md+ laptops/desktops) */}
+          <div className="relative hidden md:block">
             <button
               onClick={() => setGovernanceMenuOpen(!governanceMenuOpen)}
               onBlur={() => setTimeout(() => setGovernanceMenuOpen(false), 220)}
-              className={`min-h-[38px] flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all cursor-pointer shadow-2xs text-xs font-semibold ${
+              className={`min-h-[38px] flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded-xl border transition-all cursor-pointer shadow-2xs text-[11px] lg:text-xs font-semibold ${
                 isGovernanceRole
                   ? 'bg-[#004b87] text-white border-[#003866] shadow-xs'
                   : 'bg-[#f4f6f8] hover:bg-white text-slate-800 border-[#d8dadb] hover:border-[#004b87]'
@@ -369,7 +369,7 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="shrink-0">
                 <School className={`w-3.5 h-3.5 ${isGovernanceRole ? 'text-[#c8e27b]' : 'text-[#004b87]'}`} />
               </div>
-              <span className="text-[11px] sm:text-xs leading-none font-bold truncate max-w-[90px] sm:max-w-[130px] lg:max-w-none">
+              <span className="leading-none font-bold truncate max-w-[105px] lg:max-w-none">
                 {isGovernanceRole ? roleConfig[currentRole].shortLabel : 'Governance & Portals'}
               </span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform ${governanceMenuOpen ? 'rotate-180 text-white' : (isGovernanceRole ? 'text-white/80' : 'text-slate-500')}`} />
@@ -423,10 +423,10 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </div>
 
-          {/* Mobile Hamburger Menu Toggle (40x40px touch hitbox) */}
+          {/* Mobile Hamburger Menu Toggle (Visible on mob screen, hidden on md+) */}
           <button
             onClick={() => setMobileNavOpen(!mobileNavOpen)}
-            className="lg:hidden min-w-[38px] min-h-[38px] p-2 rounded-xl text-[#004b87] hover:bg-slate-100 border border-[#d8dadb] transition-colors flex items-center justify-center cursor-pointer"
+            className="md:hidden min-w-[38px] min-h-[38px] p-2 rounded-xl text-[#004b87] hover:bg-slate-100 border border-[#d8dadb] transition-colors flex items-center justify-center cursor-pointer"
             aria-label="Toggle Navigation Menu"
           >
             {mobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -436,7 +436,23 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* 3. Mobile Responsive Quick-Access Sheet */}
       {mobileNavOpen && (
-        <div className="lg:hidden bg-white border-b-2 border-[#0068b5] px-4 py-4 space-y-4 shadow-2xl max-h-[80vh] overflow-y-auto animate-in slide-in-from-top-2 duration-150">
+        <div className="md:hidden bg-white border-b-2 border-[#0068b5] px-4 py-4 space-y-4 shadow-2xl max-h-[80vh] overflow-y-auto animate-in slide-in-from-top-2 duration-150">
+          {/* Quick Search on Mobile Sheet */}
+          <button
+            onClick={() => {
+              setMobileNavOpen(false);
+              onOpenSearch();
+            }}
+            className="w-full min-h-[42px] px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-between text-xs font-medium transition-colors cursor-pointer"
+            title="Open Quick Search"
+          >
+            <div className="flex items-center gap-2">
+              <Search className="w-4 h-4 text-[#0068b5]" />
+              <span className="text-slate-500">Search LMS catalog, circulars &amp; timetable...</span>
+            </div>
+            <kbd className="px-1.5 py-0.5 text-[9px] bg-white text-slate-500 border border-slate-200 rounded font-mono shadow-2xs">⌘K</kbd>
+          </button>
+
           {/* Quick Student Shortcuts on Mobile */}
           <div className="space-y-2">
             <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
@@ -617,7 +633,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div
         onTouchStart={portalSwipeHandlers.onTouchStart}
         onTouchEnd={portalSwipeHandlers.onTouchEnd}
-        className="lg:hidden bg-[#f4f6f8] border-t border-[#d8dadb] px-3 py-2 flex items-center justify-between gap-2 select-none no-print shadow-2xs"
+        className="md:hidden bg-[#f4f6f8] border-t border-[#d8dadb] px-3 py-2 flex items-center justify-between gap-2 select-none no-print shadow-2xs"
       >
         <div
           ref={portalScrollRef}
