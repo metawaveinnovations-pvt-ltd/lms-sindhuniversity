@@ -1273,29 +1273,29 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
           MODAL 1: ADD / EDIT CLASS TIMETABLE SLOT
          ===================================================================== */}
       {isSlotModalOpen && editingSlot && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-xs overflow-hidden">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-full sm:max-w-lg w-full p-4 sm:p-6 shadow-2xl border border-slate-200 space-y-3.5 sm:space-y-4 max-h-[90dvh] overflow-y-auto box-border animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div>
-                <h3 className="text-base font-bold text-slate-900">
+              <div className="min-w-0 pr-2">
+                <h3 className="text-sm sm:text-base font-bold text-slate-900 truncate">
                   {classSlots.some((s) => s.id === editingSlot.id)
                     ? 'Edit Class / Lab Timetable Slot'
                     : 'Add New Class / Lab Timetable Slot'}
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-[11px] sm:text-xs text-slate-500 truncate">
                   {editingSlot.deptCode} {editingSlot.part} (Semester {editingSlot.semester})
                 </p>
               </div>
               <button
                 onClick={() => setIsSlotModalOpen(false)}
-                className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 cursor-pointer"
+                className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 cursor-pointer shrink-0"
               >
-                <X className="w-4 h-4" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSaveSlot} className="space-y-3 text-xs">
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Day</label>
                   <select
@@ -1353,7 +1353,7 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Course Code</label>
                   <input
@@ -1362,10 +1362,10 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
                     placeholder="e.g. SE24-414"
                     value={editingSlot.courseCode}
                     onChange={(e) => setEditingSlot({ ...editingSlot, courseCode: e.target.value })}
-                    className="w-full p-2 rounded-lg border border-slate-300 font-mono font-bold"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-mono font-bold text-xs"
                   />
                 </div>
-                <div className="col-span-2">
+                <div className="sm:col-span-2">
                   <label className="block font-bold text-slate-700 mb-1">Subject / Course Title</label>
                   <input
                     type="text"
@@ -1373,12 +1373,12 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
                     placeholder="e.g. Web Technologies"
                     value={editingSlot.courseTitle}
                     onChange={(e) => setEditingSlot({ ...editingSlot, courseTitle: e.target.value })}
-                    className="w-full p-2 rounded-lg border border-slate-300 font-semibold"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-semibold text-xs"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Assigned Instructor</label>
                   <input
@@ -1387,7 +1387,7 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
                     placeholder="e.g. Dr. Mumtaz Qabulio"
                     value={editingSlot.teacher}
                     onChange={(e) => setEditingSlot({ ...editingSlot, teacher: e.target.value })}
-                    className="w-full p-2 rounded-lg border border-slate-300 font-semibold"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-semibold text-xs"
                   />
                 </div>
                 <div>
@@ -1398,24 +1398,24 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
                     placeholder="e.g. Room No 10 or Comp Lab I"
                     value={editingSlot.room}
                     onChange={(e) => setEditingSlot({ ...editingSlot, room: e.target.value })}
-                    className="w-full p-2 rounded-lg border border-slate-300 font-semibold"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-semibold text-xs"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsSlotModalOpen(false)}
-                  className="px-3.5 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold cursor-pointer"
+                  className="min-h-[38px] px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold cursor-pointer text-xs"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-[#004b87] hover:bg-[#0b2545] text-white font-bold cursor-pointer"
+                  className="min-h-[38px] px-4 py-2 rounded-xl bg-[#004b87] hover:bg-[#0b2545] text-white font-bold cursor-pointer text-xs shadow-xs"
                 >
-                  Save & Sync Timetable Slot
+                  Save &amp; Sync Timetable Slot
                 </button>
               </div>
             </form>
@@ -1427,29 +1427,29 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
           MODAL 2: ADD / EDIT MIDTERM OR FINAL EXAM PAPER
          ===================================================================== */}
       {isExamModalOpen && editingExam && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-xs overflow-hidden">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-full sm:max-w-lg w-full p-4 sm:p-6 shadow-2xl border border-slate-200 space-y-3.5 sm:space-y-4 max-h-[90dvh] overflow-y-auto box-border animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div>
-                <h3 className="text-base font-bold text-slate-900">
+              <div className="min-w-0 pr-2">
+                <h3 className="text-sm sm:text-base font-bold text-slate-900 truncate">
                   {examEntries.some((x) => x.id === editingExam.id)
                     ? `Edit ${editingExam.examType} Examination Paper`
                     : `Add ${editingExam.examType} Examination Paper`}
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-[11px] sm:text-xs text-slate-500 truncate">
                   {editingExam.deptCode} {editingExam.part} · Second Semester 2026
                 </p>
               </div>
               <button
                 onClick={() => setIsExamModalOpen(false)}
-                className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 cursor-pointer"
+                className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 cursor-pointer shrink-0"
               >
-                <X className="w-4 h-4" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSaveExam} className="space-y-3 text-xs">
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Program Part</label>
                   <select
@@ -1457,7 +1457,7 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
                     onChange={(e) =>
                       setEditingExam({ ...editingExam, part: e.target.value as ProgramPart })
                     }
-                    className="w-full p-2 rounded-lg border border-slate-300 font-bold"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-bold text-xs"
                   >
                     <option value="P-I">P-I (1st Year)</option>
                     <option value="P-II">P-II (2nd Year)</option>
@@ -1473,7 +1473,7 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
                     placeholder="e.g. 12-10-2026"
                     value={editingExam.date}
                     onChange={(e) => setEditingExam({ ...editingExam, date: e.target.value })}
-                    className="w-full p-2 rounded-lg border border-slate-300 font-mono font-bold"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-mono font-bold text-xs"
                   />
                 </div>
                 <div>
@@ -1484,12 +1484,12 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
                     placeholder="09:00 A.M TO 10:00 A.M"
                     value={editingExam.time}
                     onChange={(e) => setEditingExam({ ...editingExam, time: e.target.value })}
-                    className="w-full p-2 rounded-lg border border-slate-300 font-mono font-bold"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-mono font-bold text-xs"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Course Code</label>
                   <input
@@ -1498,10 +1498,10 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
                     placeholder="e.g. SE24-414"
                     value={editingExam.courseCode}
                     onChange={(e) => setEditingExam({ ...editingExam, courseCode: e.target.value })}
-                    className="w-full p-2 rounded-lg border border-slate-300 font-mono font-bold"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-mono font-bold text-xs"
                   />
                 </div>
-                <div className="col-span-2">
+                <div className="sm:col-span-2">
                   <label className="block font-bold text-slate-700 mb-1">Subject Title</label>
                   <input
                     type="text"
@@ -1509,12 +1509,12 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
                     placeholder="e.g. Web Technologies"
                     value={editingExam.subject}
                     onChange={(e) => setEditingExam({ ...editingExam, subject: e.target.value })}
-                    className="w-full p-2 rounded-lg border border-slate-300 font-semibold"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-semibold text-xs"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Morning Teacher</label>
                   <input
@@ -1525,7 +1525,7 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
                     onChange={(e) =>
                       setEditingExam({ ...editingExam, teacherMorning: e.target.value })
                     }
-                    className="w-full p-2 rounded-lg border border-slate-300 font-semibold"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-semibold text-xs"
                   />
                 </div>
                 <div>
@@ -1537,7 +1537,7 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
                     onChange={(e) =>
                       setEditingExam({ ...editingExam, teacherEvening: e.target.value })
                     }
-                    className="w-full p-2 rounded-lg border border-slate-300 font-semibold"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-semibold text-xs"
                   />
                 </div>
               </div>
@@ -1551,21 +1551,21 @@ export const TimetableMasterEngine: React.FC<TimetableMasterEngineProps> = ({
                   onChange={(e) =>
                     setEditingExam({ ...editingExam, roomAllocation: e.target.value })
                   }
-                  className="w-full p-2 rounded-lg border border-slate-300 font-semibold"
+                  className="w-full p-2.5 rounded-xl border border-slate-300 font-semibold text-xs"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsExamModalOpen(false)}
-                  className="px-3.5 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold cursor-pointer"
+                  className="min-h-[38px] px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold cursor-pointer text-xs"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-[#004b87] hover:bg-[#0b2545] text-white font-bold cursor-pointer"
+                  className="min-h-[38px] px-4 py-2 rounded-xl bg-[#004b87] hover:bg-[#0b2545] text-white font-bold cursor-pointer text-xs shadow-xs"
                 >
                   Save Examination Entry
                 </button>

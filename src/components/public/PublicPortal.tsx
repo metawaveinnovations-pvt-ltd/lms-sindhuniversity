@@ -1244,13 +1244,13 @@ export const PublicPortal: React.FC<PublicPortalProps> = ({
           PROGRAM DETAIL MODAL (MOBILE BOTTOM SHEET + DESKTOP MODAL)
          ========================================================= */}
       {selectedProgramDetail && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center sm:p-4">
-          <div className="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full max-h-[88vh] overflow-y-auto shadow-2xl border border-slate-200 space-y-4 sm:space-y-5 p-4 sm:p-6 animate-in fade-in slide-in-from-bottom sm:zoom-in-95 duration-150">
-            <div className="w-10 h-1.5 bg-slate-300 rounded-full mx-auto sm:hidden" />
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-hidden">
+          <div className="bg-white rounded-t-3xl sm:rounded-3xl max-w-full sm:max-w-2xl w-full max-h-[90dvh] sm:max-h-[88vh] overflow-hidden flex flex-col shadow-2xl border border-slate-200 p-4 sm:p-6 animate-in fade-in slide-in-from-bottom sm:zoom-in-95 duration-150 box-border">
+            <div className="w-10 h-1.5 bg-slate-300 rounded-full mx-auto mb-2 sm:hidden shrink-0" />
             {/* Modal Header */}
-            <div className="flex items-start justify-between border-b border-slate-100 pb-4">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
+            <div className="flex items-start justify-between border-b border-slate-100 pb-3 sm:pb-4 shrink-0">
+              <div className="space-y-1 min-w-0 pr-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-900 border border-blue-200">
                     {selectedProgramDetail.degreeType} Program
                   </span>
@@ -1258,24 +1258,24 @@ export const PublicPortal: React.FC<PublicPortalProps> = ({
                     {selectedProgramDetail.accreditation}
                   </span>
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold text-slate-900">
+                <h3 className="text-base sm:text-xl font-bold text-slate-900 truncate">
                   {selectedProgramDetail.title}
                 </h3>
-                <div className="text-xs text-slate-500 font-medium">
+                <div className="text-[11px] sm:text-xs text-slate-500 font-medium truncate">
                   {selectedProgramDetail.department} · {selectedProgramDetail.faculty}
                 </div>
               </div>
 
               <button
                 onClick={() => setSelectedProgramDetail(null)}
-                className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 cursor-pointer"
+                className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 cursor-pointer shrink-0"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Modal Body */}
-            <div className="space-y-4 text-xs">
+            <div className="flex-1 overflow-y-auto space-y-4 text-xs py-2 pr-0.5">
               <p className="text-slate-600 leading-relaxed">
                 {selectedProgramDetail.description}
               </p>
@@ -1349,7 +1349,7 @@ export const PublicPortal: React.FC<PublicPortalProps> = ({
             </div>
 
             {/* Modal Footer */}
-            <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="pt-3 sm:pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3 shrink-0">
               <div className="text-[11px] text-slate-500 font-mono">
                 Directorate of Admissions · University of Sindh
               </div>

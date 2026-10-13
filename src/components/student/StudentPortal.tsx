@@ -2484,25 +2484,25 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* 2. QR Verification Dialog */}
       {showQrVerificationModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-xs overflow-hidden">
+          <div className="bg-white rounded-2xl max-w-full sm:max-w-sm w-full p-4 sm:p-6 shadow-2xl border border-slate-200 space-y-3.5 sm:space-y-4 max-h-[90dvh] overflow-y-auto box-border animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h3 className="font-bold text-slate-900 text-sm">Cryptographic QR Verification</h3>
+              <h3 className="font-bold text-slate-900 text-xs sm:text-sm">Cryptographic QR Verification</h3>
               <button 
                 onClick={() => setShowQrVerificationModal(false)}
-                className="text-slate-400 hover:text-slate-700 text-xs"
+                className="text-slate-400 hover:text-slate-700 p-1 text-sm rounded cursor-pointer"
               >
                 ✕
               </button>
             </div>
             <div className="text-center py-2 space-y-2">
               <div className="inline-block p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                <QrCode className="w-24 h-24 text-slate-900 mx-auto" />
+                <QrCode className="w-20 h-20 sm:w-24 sm:h-24 text-slate-900 mx-auto" />
               </div>
               <div className="font-mono text-xs font-bold text-emerald-800">
                 VERIFIED AUTHENTIC BY ITSC
               </div>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[10px] sm:text-[11px] text-slate-500 break-words leading-relaxed">
                 Signer: Controller of Examinations, University of Sindh<br />
                 Timestamp: 2026-10-07T13:40:00Z<br />
                 SHA-256: 7e9a8f2c01994bd5a881...
@@ -2510,7 +2510,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             </div>
             <button
               onClick={() => setShowQrVerificationModal(false)}
-              className="w-full py-2 bg-[#0b2545] text-white text-xs font-bold rounded-lg cursor-pointer"
+              className="w-full min-h-[40px] py-2 bg-[#0b2545] hover:bg-[#003866] text-white text-xs font-bold rounded-xl cursor-pointer"
             >
               Close Verification
             </button>
@@ -2520,39 +2520,39 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* 3. Book Office Hours Modal */}
       {showOfficeHoursModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-xs overflow-hidden">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-full sm:max-w-md w-full p-4 sm:p-6 shadow-2xl border border-slate-200 space-y-3.5 sm:space-y-4 max-h-[90dvh] overflow-y-auto box-border animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h3 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-                <Mail className="w-4 h-4 text-blue-700" />
-                <span>Book Faculty Office Consultation</span>
+              <h3 className="font-bold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5 truncate">
+                <Mail className="w-4 h-4 text-blue-700 shrink-0" />
+                <span className="truncate">Book Faculty Office Consultation</span>
               </h3>
               <button 
                 onClick={() => setShowOfficeHoursModal(false)}
-                className="text-slate-400 hover:text-slate-700 text-xs"
+                className="text-slate-400 hover:text-slate-700 p-1 text-sm rounded cursor-pointer shrink-0"
               >
                 ✕
               </button>
             </div>
             <div className="text-xs text-slate-600 space-y-2">
-              <p>
+              <p className="leading-relaxed">
                 Instructor: <strong>{selectedCourse.instructor}</strong><br />
                 Office: Faculty Office #14, Dept of Software Engineering<br />
-                Regular Office Hours: <strong>Mon & Wed, 02:00 PM – 04:00 PM</strong>
+                Regular Office Hours: <strong>Mon &amp; Wed, 02:00 PM – 04:00 PM</strong>
               </p>
               <div className="space-y-1">
-                <label className="font-semibold text-slate-700 block">Consultation Topic</label>
+                <label className="font-semibold text-slate-700 block text-[11px] sm:text-xs">Consultation Topic</label>
                 <input 
                   type="text" 
                   placeholder="e.g. Microservices boundary design query..."
-                  className="w-full p-2 border border-slate-300 rounded text-xs outline-hidden"
+                  className="w-full p-2.5 border border-slate-300 rounded-xl text-xs outline-hidden focus:border-[#0068b5]"
                 />
               </div>
             </div>
-            <div className="flex items-center justify-end gap-2 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 pt-2 border-t border-slate-100">
               <button
                 onClick={() => setShowOfficeHoursModal(false)}
-                className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                className="min-h-[38px] px-3.5 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
               >
                 Cancel
               </button>
@@ -2561,7 +2561,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   triggerToast(`Consultation request sent to ${selectedCourse.instructor}.`);
                   setShowOfficeHoursModal(false);
                 }}
-                className="px-3.5 py-1.5 bg-[#0068b5] hover:bg-[#004b87] text-white text-xs font-bold rounded-lg cursor-pointer"
+                className="min-h-[38px] px-4 py-2 bg-[#0068b5] hover:bg-[#004b87] text-white text-xs font-bold rounded-xl cursor-pointer"
               >
                 Confirm Booking
               </button>
@@ -2572,40 +2572,48 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* 4. Assignment Submission Modal */}
       {submittingAssignmentId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
-            <h3 className="font-bold text-slate-900 text-base">Submit Assignment File</h3>
-            <p className="text-xs text-slate-500">
-              Upload your deliverable file (PDF, ZIP, IPYNB, max 25MB). Automatic Turnitin plagiarism check will execute upon upload.
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-xs overflow-hidden">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-full sm:max-w-md w-full p-4 sm:p-6 shadow-2xl border border-slate-200 space-y-3.5 sm:space-y-4 max-h-[90dvh] overflow-y-auto box-border animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+              <h3 className="font-bold text-slate-900 text-sm sm:text-base">Submit Assignment File</h3>
+              <button
+                onClick={() => setSubmittingAssignmentId(null)}
+                className="text-slate-400 hover:text-slate-700 p-1 text-sm rounded cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed">
+              Upload deliverable (PDF, ZIP, IPYNB, max 25MB). Automated Turnitin similarity scan executes on submission.
             </p>
 
-            <div className="space-y-3">
+            <div className="space-y-2.5 sm:space-y-3">
               <label className="block text-xs font-semibold text-slate-700">File Name / Label</label>
               <input
                 type="text"
                 placeholder="e.g. Ali_Hassan_2K23_SWE_104_LabTask.pdf"
                 value={submissionFile}
                 onChange={(e) => setSubmissionFile(e.target.value)}
-                className="w-full text-xs p-2.5 rounded-lg border border-slate-300 outline-hidden focus:border-blue-500"
+                className="w-full text-xs p-2.5 rounded-xl border border-slate-300 outline-hidden focus:border-[#0068b5]"
               />
 
-              <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center text-xs text-slate-400 hover:border-blue-400 cursor-pointer">
+              <div className="border-2 border-dashed border-slate-200 rounded-xl p-4 sm:p-6 text-center text-xs text-slate-400 hover:border-[#0068b5] cursor-pointer bg-slate-50/50">
                 <Upload className="w-6 h-6 mx-auto mb-1 text-slate-400" />
-                <span>Drag and drop assignment file here or click to browse</span>
+                <span className="block text-[11px] sm:text-xs">Drag and drop file here or tap to browse</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 pt-2 border-t border-slate-100">
               <button
                 onClick={() => setSubmittingAssignmentId(null)}
-                className="px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
+                className="min-h-[38px] px-3.5 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleSubmitAssignment(submittingAssignmentId)}
                 disabled={isUploading}
-                className="px-4 py-2 text-xs font-bold bg-[#0b2545] hover:bg-blue-900 text-white rounded-lg cursor-pointer disabled:opacity-50"
+                className="min-h-[38px] px-4 py-2 text-xs font-bold bg-[#0b2545] hover:bg-[#003866] text-white rounded-xl cursor-pointer disabled:opacity-50"
               >
                 {isUploading ? 'Verifying & Uploading...' : 'Confirm Submission'}
               </button>
@@ -2616,14 +2624,22 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* 5. Statutory Attendance Shortage Appeal Modal */}
       {showAppealModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
-            <div className="flex items-center gap-2 text-amber-700 font-bold text-sm">
-              <AlertTriangle className="w-5 h-5" />
-              <span>Statutory Attendance Shortage Appeal</span>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-xs overflow-hidden">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-full sm:max-w-md w-full p-4 sm:p-6 shadow-2xl border border-slate-200 space-y-3.5 sm:space-y-4 max-h-[90dvh] overflow-y-auto box-border animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+              <div className="flex items-center gap-2 text-amber-700 font-bold text-xs sm:text-sm">
+                <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                <span>Statutory Attendance Appeal</span>
+              </div>
+              <button 
+                onClick={() => setShowAppealModal(false)}
+                className="text-slate-400 hover:text-slate-700 p-1 text-sm rounded cursor-pointer"
+              >
+                ✕
+              </button>
             </div>
-            <p className="text-xs text-slate-500">
-              Submit an official representation for missed lectures in <strong>{appealCourse}</strong> to the Course Instructor & Department Chairperson Prof. Dr. Arifa Bhutto.
+            <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed">
+              Submit representation for missed lectures in <strong>{appealCourse}</strong> to Instructor &amp; Chairperson Prof. Dr. Arifa Bhutto.
             </p>
 
             <form onSubmit={handleSendAppeal} className="space-y-3">
@@ -2632,44 +2648,44 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <select
                   value={appealCategory}
                   onChange={(e) => setAppealCategory(e.target.value)}
-                  className="w-full text-xs p-2 rounded-lg border border-slate-300 outline-hidden"
+                  className="w-full text-xs p-2.5 rounded-xl border border-slate-300 outline-hidden"
                 >
                   <option value="Medical Emergency">Medical Emergency / Hospitalization</option>
-                  <option value="Official University Representation">Official University Representation (Sports/Debates/Conference)</option>
+                  <option value="Official University Representation">Official Representation (Sports/Debates)</option>
                   <option value="Family Bereavement">Family Bereavement / Severe Circumstance</option>
                   <option value="Hajj / Umrah Sanctioned Leave">Hajj / Umrah Official Leave</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Detailed Explanation & Clinical Documentation</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Clinical Documentation / Details</label>
                 <textarea
                   required
                   rows={3}
                   value={appealReason}
                   onChange={(e) => setAppealReason(e.target.value)}
-                  placeholder="Provide clinical medical practitioner details, certificate number, or official nomination letter reference..."
-                  className="w-full text-xs p-2.5 rounded-lg border border-slate-300 outline-hidden focus:border-blue-500"
+                  placeholder="Provide physician details, certificate number, or official letter reference..."
+                  className="w-full text-xs p-2.5 rounded-xl border border-slate-300 outline-hidden focus:border-[#0068b5]"
                 />
               </div>
 
               {appealSuccess && (
-                <div className="p-2.5 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-medium border border-emerald-200">
+                <div className="p-2.5 bg-emerald-50 text-emerald-800 rounded-xl text-xs font-medium border border-emerald-200">
                   Representation formally recorded in immutable audit log. Forwarded to HOD Office.
                 </div>
               )}
 
-              <div className="flex items-center justify-end gap-2 pt-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 pt-2 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setShowAppealModal(false)}
-                  className="px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
+                  className="min-h-[38px] px-3.5 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white rounded-lg cursor-pointer"
+                  className="min-h-[38px] px-4 py-2 text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white rounded-xl cursor-pointer"
                 >
                   Submit Official Representation
                 </button>

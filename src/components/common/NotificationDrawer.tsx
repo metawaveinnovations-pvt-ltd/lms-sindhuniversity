@@ -41,24 +41,25 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-200 overflow-hidden">
       <div 
-        className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col border-l border-slate-200 animate-in slide-in-from-right duration-250"
+        className="w-full max-w-full sm:max-w-md bg-white h-full shadow-2xl flex flex-col border-l border-slate-200 animate-in slide-in-from-right duration-250 box-border"
       >
         {/* Header */}
-        <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-          <div className="flex items-center gap-2">
-            <div className="p-2 bg-blue-100 text-blue-800 rounded-lg">
-              <Bell className="w-5 h-5" />
+        <div className="p-3.5 sm:p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0 pr-2">
+            <div className="p-2 bg-blue-100 text-blue-800 rounded-xl shrink-0">
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <div>
-              <h3 className="font-bold text-slate-900 text-base">Campus Alerts & Notices</h3>
-              <p className="text-xs text-slate-500">Live Academic & Administrative Stream</p>
+            <div className="min-w-0">
+              <h3 className="font-bold text-slate-900 text-sm sm:text-base truncate">Campus Alerts &amp; Notices</h3>
+              <p className="text-[10px] sm:text-xs text-slate-500 truncate">Live Academic &amp; Administrative Stream</p>
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-lg transition-colors"
+            className="min-w-[36px] min-h-[36px] p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-xl transition-colors flex items-center justify-center cursor-pointer shrink-0"
+            aria-label="Close notifications drawer"
           >
             <X className="w-5 h-5" />
           </button>

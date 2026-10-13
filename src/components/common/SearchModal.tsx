@@ -50,53 +50,53 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-6 sm:pt-16 p-2 sm:p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in duration-150 overflow-hidden">
+      <div className="w-full max-w-full sm:max-w-2xl max-h-[88dvh] sm:max-h-[85vh] bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col box-border">
         {/* Search Input Bar */}
-        <div className="p-4 border-b border-slate-200 flex items-center gap-3 bg-slate-50/50">
-          <Search className="w-5 h-5 text-slate-400 shrink-0" />
+        <div className="p-3 sm:p-4 border-b border-slate-200 flex items-center gap-2 sm:gap-3 bg-slate-50/70 shrink-0">
+          <Search className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400 shrink-0" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search courses, roll numbers, syllabi, fee challans, audit findings (e.g. SWE-401, LMS-001)..."
-            className="flex-1 bg-transparent border-none outline-hidden text-sm text-slate-900 placeholder-slate-400 font-medium"
+            placeholder="Search courses, roll numbers, syllabi, fee challans (e.g. SWE-401)..."
+            className="flex-1 bg-transparent border-none outline-hidden text-xs sm:text-sm text-slate-900 placeholder-slate-400 font-medium min-w-0"
             autoFocus
           />
           {query && (
             <button 
               onClick={() => setQuery('')}
-              className="p-1 text-slate-400 hover:text-slate-600 rounded"
+              className="p-1 text-slate-400 hover:text-slate-600 rounded cursor-pointer shrink-0"
             >
               <X className="w-4 h-4" />
             </button>
           )}
           <button 
             onClick={onClose}
-            className="text-xs px-2 py-1 bg-slate-200/70 hover:bg-slate-200 text-slate-600 rounded font-mono"
+            className="text-[10px] sm:text-xs px-2 py-1 bg-slate-200/70 hover:bg-slate-200 text-slate-600 rounded-lg font-mono cursor-pointer shrink-0"
           >
             ESC
           </button>
         </div>
 
         {/* Results Container */}
-        <div className="max-h-96 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
           {/* Quick Suggestions if query is empty */}
           {!query && (
-            <div className="space-y-3">
-              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="space-y-2.5 sm:space-y-3">
+              <div className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider font-mono">
                 Quick Shortcuts
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                 <button
                   onClick={() => { onNavigate('vc'); onClose(); }}
                   className="p-2.5 rounded-xl border border-[#d8dadb] hover:border-[#004b87] hover:bg-[#004b87]/5 text-left transition-colors flex items-center justify-between cursor-pointer"
                 >
-                  <div>
-                    <div className="text-xs font-semibold text-slate-800">VC University Command</div>
-                    <div className="text-[10px] text-slate-500">14 Faculties KPI Radar</div>
+                  <div className="min-w-0">
+                    <div className="text-xs font-semibold text-slate-800 truncate">VC University Command</div>
+                    <div className="text-[10px] text-slate-500 truncate">14 Faculties KPI Radar</div>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 shrink-0 ml-1.5" />
                 </button>
                 <button
                   onClick={() => { onNavigate('dean'); onClose(); }}
@@ -223,9 +223,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         </div>
 
         {/* Footer info */}
-        <div className="p-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex items-center justify-between">
-          <span>Search spans Student Workspace, Faculty Roster & Technical Architecture</span>
-          <span className="font-mono text-[11px]">MetaWave Innovations FastIndex</span>
+        <div className="p-2.5 sm:p-3 bg-slate-50 border-t border-slate-200 text-[11px] sm:text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-1 sm:gap-2 shrink-0 text-center sm:text-left">
+          <span className="truncate max-w-full">Search spans Student Workspace, Faculty Roster &amp; Architecture</span>
+          <span className="font-mono text-[10px] sm:text-[11px] text-slate-400 shrink-0">MetaWave Innovations FastIndex</span>
         </div>
       </div>
     </div>

@@ -62,7 +62,7 @@ export const PlatformNoticeModal: React.FC<PlatformNoticeModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-xs transition-opacity duration-200 p-0 sm:p-4 md:p-6 overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/75 backdrop-blur-xs transition-opacity duration-200 p-0 sm:p-4 md:p-6 overflow-hidden"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-headline"
@@ -75,43 +75,44 @@ export const PlatformNoticeModal: React.FC<PlatformNoticeModalProps> = ({
       />
 
       {/* Main Responsive Dialog Container:
-          - Mobile (<sm): Slide-up bottom sheet with max height 90vh, rounded top, thumb drag pill
-          - Tablet (sm..lg): Centered dialog with 600px max width
-          - Desktop (lg+): Centered dialog with 760px max width, dual-column cards
+          - Mobile (<sm): Slide-up bottom sheet with rounded top, maximum 90dvh height, 100% width
+          - Tablet (sm..lg): Centered dialog with 580px max width
+          - Desktop (lg+): Centered dialog with 680px max width
+          - Universal: overflow-x-hidden and box-border so it never overflows screen width
       */}
       <div 
-        className="w-full sm:max-w-xl lg:max-w-2xl bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200/90 flex flex-col max-h-[92dvh] sm:max-h-[88vh] overflow-hidden animate-in fade-in zoom-in-95 duration-200 relative text-slate-900"
+        className="w-full max-w-full sm:max-w-xl lg:max-w-2xl bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200/90 flex flex-col max-h-[90dvh] sm:max-h-[85vh] overflow-hidden animate-in fade-in zoom-in-95 duration-200 relative text-slate-900 box-border"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Mobile Drag Indicator Bar */}
-        <div className="sm:hidden pt-3 pb-1 flex justify-center bg-[#004b87]">
-          <div className="w-12 h-1.5 bg-white/40 rounded-full" />
+        <div className="sm:hidden pt-2.5 pb-1 flex justify-center bg-[#004b87] shrink-0">
+          <div className="w-12 h-1 bg-white/40 rounded-full" />
         </div>
 
         {/* Modal Header */}
-        <div className="bg-gradient-to-r from-[#003866] via-[#004b87] to-[#0068b5] text-white px-5 sm:px-7 py-4 sm:py-5 border-b border-[#0068b5]/50 relative shrink-0">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="p-1.5 bg-white rounded-2xl border-2 border-white/20 shadow-md shrink-0">
-                <UniversitySeal size="md" />
+        <div className="bg-gradient-to-r from-[#003866] via-[#004b87] to-[#0068b5] text-white px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[#0068b5]/50 relative shrink-0">
+          <div className="flex items-start justify-between gap-2.5">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="p-1 sm:p-1.5 bg-white rounded-xl sm:rounded-2xl border-2 border-white/20 shadow-md shrink-0">
+                <UniversitySeal size="sm" />
               </div>
-              <div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#c8e27b] text-[#003866] text-[10px] font-mono font-bold tracking-wider uppercase shadow-xs flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-[#003866]" />
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="px-2 py-0.5 rounded-full bg-[#c8e27b] text-[#003866] text-[9px] sm:text-[10px] font-mono font-bold tracking-wider uppercase shadow-xs flex items-center gap-1">
+                    <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#003866]" />
                     LMS &amp; E-Portal Showcase Model
                   </span>
-                  <span className="text-[10px] text-slate-200 font-mono hidden sm:inline">
+                  <span className="text-[10px] text-slate-200 font-mono hidden md:inline">
                     MetaWave Innovations
                   </span>
                 </div>
                 <h2 
                   id="modal-headline"
-                  className="text-base sm:text-xl font-black tracking-tight text-white mt-1 leading-snug font-sans"
+                  className="text-sm sm:text-lg font-black tracking-tight text-white mt-0.5 leading-snug font-sans truncate"
                 >
                   University of Sindh LMS &amp; E-Portal
                 </h2>
-                <p className="text-xs text-slate-200 font-medium">
+                <p className="text-[11px] sm:text-xs text-slate-200 font-medium truncate">
                   Modernization Platform · Demonstration &amp; Sample Showcase
                 </p>
               </div>
@@ -128,8 +129,8 @@ export const PlatformNoticeModal: React.FC<PlatformNoticeModalProps> = ({
           </div>
         </div>
 
-        {/* Scrollable Modal Body */}
-        <div className="p-5 sm:p-7 space-y-4 sm:space-y-5 overflow-y-auto text-slate-700 text-xs sm:text-sm leading-relaxed">
+        {/* Scrollable Modal Body (Matches CSS selector 1, strictly guarded against horizontal overflow) */}
+        <div className="p-4 sm:p-6 space-y-3.5 sm:space-y-4 overflow-y-auto overflow-x-hidden text-slate-700 text-xs sm:text-sm leading-relaxed max-w-full">
           
           {/* Main Core Disclaimer Callout */}
           <div className="p-4 sm:p-4.5 rounded-2xl bg-amber-50/90 border-2 border-amber-300/80 text-amber-950 flex items-start gap-3 shadow-xs">
@@ -149,18 +150,18 @@ export const PlatformNoticeModal: React.FC<PlatformNoticeModalProps> = ({
             </div>
           </div>
 
-          {/* 3 Clear Core Cards: LMS Mode, Global Search + AI, Sample Data */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-3.5">
+          {/* 3 Clear Core Cards: LMS Mode, Global Search + AI, Sample Data (1-column on mobile & small tablet, 3-col on desktop) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 sm:gap-3">
             {/* Card 1: LMS & E-Portal Mode */}
-            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-2 hover:border-[#0068b5]/50 transition-colors">
+            <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-2 hover:border-[#0068b5]/50 transition-colors">
               <div className="space-y-1.5">
-                <div className="w-8 h-8 rounded-xl bg-[#004b87]/10 text-[#004b87] flex items-center justify-center">
-                  <Laptop className="w-4 h-4 text-[#004b87]" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#004b87]/10 text-[#004b87] flex items-center justify-center shrink-0">
+                  <Laptop className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#004b87]" />
                 </div>
                 <h4 className="font-bold text-slate-900 text-xs leading-tight">
                   LMS &amp; E-Portal Mode
                 </h4>
-                <p className="text-slate-600 text-[11px] leading-relaxed">
+                <p className="text-slate-600 text-[11px] leading-relaxed break-words">
                   Engineered as a full Learning Management System and university E-Portal with interactive workflows for students, teachers, HODs, deans, and the VC.
                 </p>
               </div>
@@ -170,15 +171,15 @@ export const PlatformNoticeModal: React.FC<PlatformNoticeModalProps> = ({
             </div>
 
             {/* Card 2: Global Search & AI */}
-            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-2 hover:border-[#84a433]/50 transition-colors">
+            <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-2 hover:border-[#84a433]/50 transition-colors">
               <div className="space-y-1.5">
-                <div className="w-8 h-8 rounded-xl bg-[#84a433]/15 text-[#546e1a] flex items-center justify-center">
-                  <Globe className="w-4 h-4 text-[#546e1a]" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#84a433]/15 text-[#546e1a] flex items-center justify-center shrink-0">
+                  <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#546e1a]" />
                 </div>
                 <h4 className="font-bold text-slate-900 text-xs leading-tight">
                   Global Search &amp; AI
                 </h4>
-                <p className="text-slate-600 text-[11px] leading-relaxed">
+                <p className="text-slate-600 text-[11px] leading-relaxed break-words">
                   Information on academic faculties, syllabi outlines, and rules was compiled using global web search results and developed with AI assistance.
                 </p>
               </div>
@@ -188,15 +189,15 @@ export const PlatformNoticeModal: React.FC<PlatformNoticeModalProps> = ({
             </div>
 
             {/* Card 3: All Data is Sample */}
-            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-2 hover:border-amber-300 transition-colors">
+            <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-2 hover:border-amber-300 transition-colors">
               <div className="space-y-1.5">
-                <div className="w-8 h-8 rounded-xl bg-amber-100/70 text-amber-800 flex items-center justify-center">
-                  <Database className="w-4 h-4 text-amber-800" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-100/70 text-amber-800 flex items-center justify-center shrink-0">
+                  <Database className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-800" />
                 </div>
                 <h4 className="font-bold text-slate-900 text-xs leading-tight">
                   All Data is Sample
                 </h4>
-                <p className="text-slate-600 text-[11px] leading-relaxed">
+                <p className="text-slate-600 text-[11px] leading-relaxed break-words">
                   All student profiles, roll numbers, attendance records, exam results, and fee vouchers are purely illustrative sample data for demonstration.
                 </p>
               </div>
@@ -207,53 +208,53 @@ export const PlatformNoticeModal: React.FC<PlatformNoticeModalProps> = ({
           </div>
 
           {/* Quick Summary of Features Demonstrated */}
-          <div className="bg-slate-50 rounded-2xl p-3.5 border border-slate-200">
+          <div className="bg-slate-50 rounded-2xl p-3 sm:p-3.5 border border-slate-200">
             <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono mb-2">
               Features demonstrated in this LMS &amp; E-Portal sample:
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-700 font-medium">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 text-[11px] text-slate-700 font-medium">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Student LMS with course modules &amp; assignments</span>
+                <span className="break-words">Student LMS with course modules &amp; assignments</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Live 75% attendance policy monitoring</span>
+                <span className="break-words">Live 75% attendance policy monitoring</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Master timetable &amp; exam datesheet engine</span>
+                <span className="break-words">Master timetable &amp; exam datesheet engine</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>QR-coded examination admit slip &amp; 1Link challan</span>
+                <span className="break-words">QR-coded examination admit slip &amp; 1Link challan</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Modal Footer Controls */}
-        <div className="bg-slate-50 px-5 sm:px-7 py-3.5 sm:py-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+        {/* Modal Footer Controls (Responsive wrap and hitboxes) */}
+        <div className="bg-slate-50 px-4 sm:px-6 py-3 sm:py-3.5 border-t border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3 shrink-0">
           {/* Don't show again this session toggle */}
-          <label className="flex items-center gap-2 text-[11px] sm:text-xs text-slate-600 cursor-pointer select-none self-start sm:self-auto">
+          <label className="flex items-center gap-2 text-[11px] sm:text-xs text-slate-600 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={dontShowAgainSession}
               onChange={(e) => setDontShowAgainSession(e.target.checked)}
-              className="rounded text-[#004b87] focus:ring-[#004b87] border-slate-300 w-3.5 h-3.5 cursor-pointer"
+              className="rounded text-[#004b87] focus:ring-[#004b87] border-slate-300 w-3.5 h-3.5 cursor-pointer shrink-0"
             />
-            <span>Do not show again during this browser session</span>
+            <span className="leading-tight">Do not show again this browser session</span>
           </label>
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          {/* Action Buttons: stack on mobile, inline on sm+ */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
             {onOpenArchitecture && (
               <button
                 type="button"
                 onClick={handleGoToArchitecture}
-                className="flex-1 sm:flex-none min-h-[42px] px-3.5 py-2 rounded-xl border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full sm:w-auto min-h-[40px] px-3.5 py-2 rounded-xl border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <FileCode2 className="w-3.5 h-3.5 text-slate-500" />
+                <FileCode2 className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                 <span>Architecture Audit</span>
               </button>
             )}
@@ -261,10 +262,10 @@ export const PlatformNoticeModal: React.FC<PlatformNoticeModalProps> = ({
             <button
               type="button"
               onClick={handleDismiss}
-              className="flex-1 sm:flex-none min-h-[42px] px-5 py-2 rounded-xl bg-[#004b87] hover:bg-[#003866] text-white text-xs font-bold transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto min-h-[40px] px-4 sm:px-5 py-2 rounded-xl bg-[#004b87] hover:bg-[#003866] text-white text-xs font-bold transition-all shadow-xs hover:shadow-md flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Explore LMS &amp; E-Portal</span>
-              <ArrowRight className="w-4 h-4 text-[#c8e27b]" />
+              <ArrowRight className="w-4 h-4 text-[#c8e27b] shrink-0" />
             </button>
           </div>
         </div>

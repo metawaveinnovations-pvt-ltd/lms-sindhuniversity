@@ -35,10 +35,10 @@ export const ModernizationDocModal: React.FC<ModernizationDocModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex flex-col bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 overflow-hidden">
       {/* Top Universal App Modal Bar */}
       <div className="bg-[#031f39] text-white border-b border-[#004b87] px-3 sm:px-6 py-2.5 flex items-center justify-between shrink-0 shadow-md">
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 pr-2">
           <div className="w-2.5 h-2.5 rounded-full bg-[#84a433] shrink-0 animate-pulse" />
           <div className="truncate">
             <span className="text-[10px] sm:text-xs font-bold text-[#c8e27b] uppercase tracking-wider block sm:inline">
@@ -68,7 +68,7 @@ export const ModernizationDocModal: React.FC<ModernizationDocModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 sm:px-3 sm:py-1.5 rounded-lg bg-white/10 hover:bg-rose-600/80 text-slate-200 hover:text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
+            className="min-w-[36px] min-h-[36px] p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-white/10 hover:bg-rose-600/80 text-slate-200 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
             aria-label="Close document modal"
           >
             <X className="w-4 h-4" />
