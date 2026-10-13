@@ -347,6 +347,120 @@ export const HISTORICAL_TRANSCRIPT: ResultItem[] = [
   }
 ];
 
+export interface CompletedCourseRecord {
+  code: string;
+  title: string;
+  creditHours: number;
+  letterGrade: string;
+  gradePoint: number;
+  marksScore: number;
+  semester: number;
+  academicSession: string;
+  department: string;
+  instructor: string;
+  syllabusOverview: string;
+  remarks: string;
+}
+
+export const COMPLETED_COURSES: CompletedCourseRecord[] = [
+  // Semester 1
+  { code: 'ENG-101', title: 'Functional English', creditHours: 3, marksScore: 80, gradePoint: 3.5, letterGrade: 'B+', semester: 1, academicSession: 'Spring 2023', department: 'Institute of English Language', instructor: 'Prof. Ghulam Ali', syllabusOverview: 'Grammar mechanics, technical reading comprehension, and academic expository writing.', remarks: 'Clear' },
+  { code: 'MTH-102', title: 'Calculus & Analytical Geometry', creditHours: 3, marksScore: 85, gradePoint: 4.0, letterGrade: 'A', semester: 1, academicSession: 'Spring 2023', department: 'Department of Mathematics', instructor: 'Dr. Abdul Sattar', syllabusOverview: 'Functions, limits, differentiation, Riemann integrals, and analytic plane curves.', remarks: 'Clear' },
+  { code: 'PHY-103', title: 'Applied Physics', creditHours: 3, marksScore: 76, gradePoint: 3.0, letterGrade: 'B', semester: 1, academicSession: 'Spring 2023', department: 'Department of Physics', instructor: 'Dr. Imran Khan', syllabusOverview: 'Classical mechanics, electromagnetism, semiconductor physics, and circuit laws.', remarks: 'Clear' },
+  { code: 'CS-105', title: 'Introduction to Computing & ICT', creditHours: 3, marksScore: 82, gradePoint: 3.5, letterGrade: 'B+', semester: 1, academicSession: 'Spring 2023', department: 'Software Engineering', instructor: 'Engr. Zeeshan Ali', syllabusOverview: 'Binary logic, computer architecture, memory hierarchies, and computing basics.', remarks: 'Clear' },
+  { code: 'PST-107', title: 'Pakistan Studies & Islamic Ethics', creditHours: 2, marksScore: 78, gradePoint: 3.0, letterGrade: 'B', semester: 1, academicSession: 'Spring 2023', department: 'Faculty of Social Sciences', instructor: 'Prof. Nisar Ahmed', syllabusOverview: 'Ideological origins, constitutional evolution, and ethical governance.', remarks: 'Clear' },
+
+  // Semester 2
+  { code: 'SWE-102', title: 'Programming Fundamentals (C++)', creditHours: 4, marksScore: 86, gradePoint: 4.0, letterGrade: 'A', semester: 2, academicSession: 'Fall 2023', department: 'Software Engineering', instructor: 'Prof. Dr. Arifa Bhutto', syllabusOverview: 'Algorithmic thinking, control structures, pointers, memory allocation, and modular design in modern C++.', remarks: 'Clear' },
+  { code: 'MTH-104', title: 'Linear Algebra & Differential Equations', creditHours: 3, marksScore: 79, gradePoint: 3.0, letterGrade: 'B', semester: 2, academicSession: 'Fall 2023', department: 'Department of Mathematics', instructor: 'Dr. Tariq Nizamani', syllabusOverview: 'Matrices, Gaussian elimination, eigenvalues, eigenvectors, and ODE modeling.', remarks: 'Clear' },
+  { code: 'ENG-103', title: 'Communication & Presentation Skills', creditHours: 3, marksScore: 84, gradePoint: 3.5, letterGrade: 'B+', semester: 2, academicSession: 'Fall 2023', department: 'Institute of English Language', instructor: 'Ms. Sadia Memon', syllabusOverview: 'Interpersonal workplace communication, persuasive rhetoric, and technical presentations.', remarks: 'Clear' },
+  { code: 'SWE-106', title: 'Discrete Mathematical Structures', creditHours: 3, marksScore: 88, gradePoint: 4.0, letterGrade: 'A', semester: 2, academicSession: 'Fall 2023', department: 'Software Engineering', instructor: 'Prof. Dr. Dil Nawaz Hakro', syllabusOverview: 'Propositional calculus, set theory, combinatorics, recurrence relations, and graph theory.', remarks: 'Clear' },
+  { code: 'ISL-108', title: 'Islamic Studies / Ethical Behavior', creditHours: 2, marksScore: 80, gradePoint: 3.5, letterGrade: 'B+', semester: 2, academicSession: 'Fall 2023', department: 'Faculty of Social Sciences', instructor: 'Dr. Qasim Soomro', syllabusOverview: 'Quranic epistemology, prophetic workplace ethics, and universal human rights.', remarks: 'Clear' },
+
+  // Semester 3
+  { code: 'SWE-201', title: 'Object Oriented Programming (Java)', creditHours: 4, marksScore: 88, gradePoint: 4.0, letterGrade: 'A', semester: 3, academicSession: 'Spring 2024', department: 'Software Engineering', instructor: 'Engr. Aamir Mallah', syllabusOverview: 'Encapsulation, inheritance, polymorphism, abstract classes, Java collections, and exception handling.', remarks: 'Clear' },
+  { code: 'SWE-203', title: 'Data Structures & Algorithms', creditHours: 4, marksScore: 84, gradePoint: 3.5, letterGrade: 'B+', semester: 3, academicSession: 'Spring 2024', department: 'Software Engineering', instructor: 'Prof. Dr. Rafique Ahmed Bhutto', syllabusOverview: 'Stacks, queues, linked lists, self-balancing trees, heap sort, hash tables, and Big-O complexity analysis.', remarks: 'Clear' },
+  { code: 'SWE-205', title: 'Software Engineering Concepts', creditHours: 3, marksScore: 89, gradePoint: 4.0, letterGrade: 'A', semester: 3, academicSession: 'Spring 2024', department: 'Software Engineering', instructor: 'Prof. Dr. Arifa Bhutto', syllabusOverview: 'SDLC models, Agile Scrum ceremonies, Unified Process, architectural patterns, and quality metrics.', remarks: 'Clear' },
+  { code: 'MTH-207', title: 'Probability & Statistics for Engineers', creditHours: 3, marksScore: 81, gradePoint: 3.5, letterGrade: 'B+', semester: 3, academicSession: 'Spring 2024', department: 'Department of Mathematics', instructor: 'Dr. Shahida Soomro', syllabusOverview: 'Random variables, Bayes theorem, normal distributions, hypothesis testing, and regression analysis.', remarks: 'Clear' },
+
+  // Semester 4
+  { code: 'SWE-202', title: 'Database Systems & SQL Design', creditHours: 4, marksScore: 83, gradePoint: 3.5, letterGrade: 'B+', semester: 4, academicSession: 'Fall 2024', department: 'Software Engineering', instructor: 'Engr. Zeeshan Ali', syllabusOverview: 'Relational data model, ACID properties, ER diagrams, 3NF normalization, and complex PostgreSQL indexing.', remarks: 'Clear' },
+  { code: 'SWE-204', title: 'Operating Systems Principles', creditHours: 4, marksScore: 79, gradePoint: 3.0, letterGrade: 'B', semester: 4, academicSession: 'Fall 2024', department: 'Software Engineering', instructor: 'Dr. Tariq Nizamani', syllabusOverview: 'Processes, concurrency, semaphores, deadlock avoidance, virtual memory paging, and Linux syscalls.', remarks: 'Clear' },
+  { code: 'SWE-206', title: 'Software Requirements Engineering', creditHours: 3, marksScore: 87, gradePoint: 4.0, letterGrade: 'A', semester: 4, academicSession: 'Fall 2024', department: 'Software Engineering', instructor: 'Prof. Dr. Rafique Ahmed Bhutto', syllabusOverview: 'Stakeholder interviews, IEEE 830 SRS authoring, user stories, boundary analysis, and requirements traceability.', remarks: 'Clear' },
+  { code: 'CS-208', title: 'Computer Communication & Networks', creditHours: 3, marksScore: 82, gradePoint: 3.5, letterGrade: 'B+', semester: 4, academicSession: 'Fall 2024', department: 'Computer Science', instructor: 'Dr. Kamran Dahri', syllabusOverview: 'OSI 7-layer stack, TCP/IP congestion control, subnetting, CIDR, DNS, and socket programming.', remarks: 'Clear' },
+
+  // Semester 5
+  { code: 'SWE-301', title: 'Web Engineering & Full-Stack Systems', creditHours: 4, marksScore: 90, gradePoint: 4.0, letterGrade: 'A', semester: 5, academicSession: 'Spring 2025', department: 'Software Engineering', instructor: 'Engr. Aamir Mallah', syllabusOverview: 'TypeScript, React SPA architecture, REST APIs, GraphQL, stateless JWT auth, and micro-frontend design.', remarks: 'Clear' },
+  { code: 'SWE-303', title: 'Human Computer Interaction (HCI)', creditHours: 3, marksScore: 85, gradePoint: 4.0, letterGrade: 'A', semester: 5, academicSession: 'Spring 2025', department: 'Software Engineering', instructor: 'Prof. Dr. Dil Nawaz Hakro', syllabusOverview: 'Nielsen heuristics, wireframing, cognitive load theory, WCAG 2.2 accessibility, and usability lab testing.', remarks: 'Clear' },
+  { code: 'SWE-305', title: 'Formal Methods in Software Eng', creditHours: 3, marksScore: 76, gradePoint: 3.0, letterGrade: 'B', semester: 5, academicSession: 'Spring 2025', department: 'Software Engineering', instructor: 'Prof. Dr. Arifa Bhutto', syllabusOverview: 'First-order predicate logic, Z notation, formal invariant specifications, and Hoare logic correctness proofs.', remarks: 'Clear' },
+  { code: 'MGT-307', title: 'Engineering Economics & Project Management', creditHours: 3, marksScore: 83, gradePoint: 3.5, letterGrade: 'B+', semester: 5, academicSession: 'Spring 2025', department: 'Institute of Commerce', instructor: 'Prof. Aslam Brohi', syllabusOverview: 'Cost-benefit analysis, depreciation methods, NPV/IRR calculations, and enterprise risk register matrices.', remarks: 'Clear' },
+
+  // Semester 6
+  { code: 'SWE-302', title: 'Software Construction & Development', creditHours: 3, marksScore: 89, gradePoint: 4.0, letterGrade: 'A', semester: 6, academicSession: 'Fall 2025', department: 'Software Engineering', instructor: 'Prof. Dr. Rafique Ahmed Bhutto', syllabusOverview: 'Clean code principles, refactoring techniques, defensive programming, automated linters, and CI/CD pipelines.', remarks: 'Clear' },
+  { code: 'SWE-304', title: 'Software Project Management (Agile)', creditHours: 3, marksScore: 91, gradePoint: 4.0, letterGrade: 'A', semester: 6, academicSession: 'Fall 2025', department: 'Software Engineering', instructor: 'Engr. Aamir Mallah', syllabusOverview: 'Scrum sprint cadence, story point poker estimation, burn-down velocity charts, and Jira backlog grooming.', remarks: 'Clear' },
+  { code: 'SWE-306', title: 'Information Security & Cryptography', creditHours: 3, marksScore: 82, gradePoint: 3.5, letterGrade: 'B+', semester: 6, academicSession: 'Fall 2025', department: 'Software Engineering', instructor: 'Dr. Tariq Nizamani', syllabusOverview: 'Symmetric & asymmetric encryption (AES, RSA), hashing (SHA-256), PKI certificates, OWASP Top 10 mitigation.', remarks: 'Clear' },
+  { code: 'CS-308', title: 'Artificial Intelligence & Machine Learning', creditHours: 3, marksScore: 86, gradePoint: 4.0, letterGrade: 'A', semester: 6, academicSession: 'Fall 2025', department: 'Computer Science', instructor: 'Dr. Kamran Dahri', syllabusOverview: 'A* search, decision trees, logistic regression, gradient descent, neural networks, and model evaluation metrics.', remarks: 'Clear' },
+  { code: 'ENG-310', title: 'Technical & Business Report Writing', creditHours: 3, marksScore: 85, gradePoint: 4.0, letterGrade: 'A', semester: 6, academicSession: 'Fall 2025', department: 'Institute of English Language', instructor: 'Ms. Sadia Memon', syllabusOverview: 'Formal engineering feasibility reports, RFP responses, executive summaries, and academic whitepapers.', remarks: 'Clear' }
+];
+
+export interface FailedCourseRecord {
+  code: string;
+  title: string;
+  creditHours: number;
+  letterGrade: string;
+  gradePoint: number;
+  marksScore: number;
+  passingMarks: number;
+  semesterAttempted: number;
+  academicSession: string;
+  department: string;
+  instructor: string;
+  failureReason: string;
+  repeatPolicy: string;
+  eligibleSession: string;
+  prerequisiteFor: string;
+  status: 'Pending Re-sit' | 'Repeat Registration Open' | 'Medical Appeal Approved';
+}
+
+export const FAILED_COURSES: FailedCourseRecord[] = [
+  {
+    code: 'MTH-202',
+    title: 'Multivariable Calculus & Vector Analysis',
+    creditHours: 3,
+    letterGrade: 'F',
+    gradePoint: 0.00,
+    marksScore: 42,
+    passingMarks: 50,
+    semesterAttempted: 3,
+    academicSession: 'Spring 2024',
+    department: 'Department of Mathematics',
+    instructor: 'Dr. Ghulam Murtaza',
+    failureReason: 'Missed final semester examination due to documented emergency hospitalization.',
+    repeatPolicy: 'HEC Regulation Clause 14.2: Full grade replacement permitted. Grade F will be superseded upon passing re-sit.',
+    eligibleSession: 'Fall 2026 Supplementary / Re-Sit Window',
+    prerequisiteFor: 'Advanced Numerical Computing',
+    status: 'Repeat Registration Open'
+  },
+  {
+    code: 'EE-104',
+    title: 'Basic Electrical Circuit Theory & Electronics',
+    creditHours: 3,
+    letterGrade: 'F',
+    gradePoint: 0.00,
+    marksScore: 38,
+    passingMarks: 50,
+    semesterAttempted: 2,
+    academicSession: 'Fall 2023',
+    department: 'Department of Electrical Engineering',
+    instructor: 'Engr. Zulfiqar Memon',
+    failureReason: 'Theory component aggregate fell below the 50% passing threshold.',
+    repeatPolicy: 'Engineering Elective Backlog: Maximum 2 repeat attempts permitted before final degree clearance.',
+    eligibleSession: '8th Semester (Spring 2027) / Summer 2027 Term',
+    prerequisiteFor: 'Microprocessor Interfacing & Embedded Systems',
+    status: 'Pending Re-sit'
+  }
+];
+
 export const FEE_CHALLANS: ChallanRecord[] = [
   {
     challanNumber: 'UOS-2026-FEE-84920',

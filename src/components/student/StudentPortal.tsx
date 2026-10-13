@@ -7,9 +7,14 @@ import {
   ATTENDANCE_HISTORY, 
   EXAM_SCHEDULE, 
   HISTORICAL_TRANSCRIPT, 
-  FEE_CHALLANS 
+  FEE_CHALLANS,
+  COMPLETED_COURSES,
+  FAILED_COURSES,
+  CompletedCourseRecord,
+  FailedCourseRecord
 } from '../../data/mockAcademicData';
 import { CourseWeeklyModules } from '../common/CourseWeeklyModules';
+import { CoursesPortalView } from './CoursesPortalView';
 import { GpaCalculatorModal } from '../common/GpaCalculatorModal';
 import { UniversitySeal } from '../common/UniversitySeal';
 import { TimetableMasterEngine } from '../common/TimetableMasterEngine';
@@ -41,6 +46,7 @@ import {
   Info,
   Calculator,
   ArrowRight,
+  ArrowLeft,
   Layers,
   HelpCircle,
   ShieldCheck,
@@ -62,7 +68,11 @@ import {
   Mail,
   MapPin,
   Bookmark,
-  Share2
+  Share2,
+  RotateCcw,
+  RefreshCw,
+  AlertCircle,
+  Sparkles
 } from 'lucide-react';
 
 interface StudentPortalProps {
@@ -185,13 +195,29 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   });
   const courseToolScrollRef = useAutoScrollActivePill(courseTool);
 
-  // Course Dashboard Filters (NUST LMS style)
+  // Course Dashboard & Courses Portal View Filters (NUST/LUMS style)
   const [courseSearchQuery, setCourseSearchQuery] = useState('');
+  const [courseStatusFilter, setCourseStatusFilter] = useState<'Current Semester' | 'Completed' | 'Failed'>('Current Semester');
+  const [courseViewMode, setCourseViewMode] = useState<'grid' | 'workspace'>('grid');
   const [courseCategoryFilter, setCourseCategoryFilter] = useState<'All' | 'In Progress' | 'High Attendance' | 'At Risk'>('All');
+  const [completedSemesterFilter, setCompletedSemesterFilter] = useState<string>('all');
+  const [selectedCompletedCourse, setSelectedCompletedCourse] = useState<CompletedCourseRecord | null>(null);
+  const [selectedFailedCourse, setSelectedFailedCourse] = useState<FailedCourseRecord | null>(null);
+  const [resitModalCourse, setResitModalCourse] = useState<FailedCourseRecord | null>(null);
+  const [resitRegisteredCodes, setResitRegisteredCodes] = useState<string[]>([]);
+  const [resitReasonInput, setResitReasonInput] = useState<string>('Attending regular revision lectures and requesting exam hall clearance.');
+
   const categoryFilterSwipe = useSwipeNavigation<'All' | 'In Progress' | 'High Attendance' | 'At Risk'>({
     items: ['All', 'In Progress', 'High Attendance', 'At Risk'],
     activeItem: courseCategoryFilter,
     onSelect: setCourseCategoryFilter,
+    minSwipeDistance: 35
+  });
+
+  const courseStatusSwipe = useSwipeNavigation<'Current Semester' | 'Completed' | 'Failed'>({
+    items: ['Current Semester', 'Completed', 'Failed'],
+    activeItem: courseStatusFilter,
+    onSelect: setCourseStatusFilter,
     minSwipeDistance: 35
   });
 
@@ -234,6 +260,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       const validTools = ['modules', 'syllabus', 'assignments', 'gradebook', 'attendance', 'resources', 'roster'];
       if (validTools.includes(activeSubTab)) {
         setCourseTool(activeSubTab as any);
+        setCourseViewMode('workspace');
       }
     }
     if (activeTab === 'assignments') {
@@ -384,16 +411,48 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   const simulatedSemesterGpa = Number((simulatedSemesterQualityPoints / currentSemesterCredits).toFixed(2));
   const projectedGraduationCgpa = Number(((currentTotalQualityPoints + simulatedSemesterQualityPoints) / (totalCompletedCredits + currentSemesterCredits)).toFixed(2));
 
-  // Filter courses on dashboard
-  const filteredCourses = ENROLLED_COURSES.filter(c => {
-    const matchSearch = c.title.toLowerCase().includes(courseSearchQuery.toLowerCase()) || 
-                        c.code.toLowerCase().includes(courseSearchQuery.toLowerCase()) || 
-                        c.instructor.toLowerCase().includes(courseSearchQuery.toLowerCase());
+  // Filter courses on dashboard & Courses Portal View
+  const filteredCurrentCourses = ENROLLED_COURSES.filter(c => {
+    const q = courseSearchQuery.toLowerCase().trim();
+    const matchSearch = !q || 
+      c.title.toLowerCase().includes(q) || 
+      c.code.toLowerCase().includes(q) || 
+      c.instructor.toLowerCase().includes(q) ||
+      c.department.toLowerCase().includes(q) ||
+      c.classroom.toLowerCase().includes(q);
     if (!matchSearch) return false;
     if (courseCategoryFilter === 'High Attendance') return c.attendancePercent >= 90;
     if (courseCategoryFilter === 'At Risk') return c.attendancePercent < 75;
     return true;
   });
+
+  const filteredCompletedCourses = COMPLETED_COURSES.filter(c => {
+    const q = courseSearchQuery.toLowerCase().trim();
+    const matchSearch = !q ||
+      c.title.toLowerCase().includes(q) ||
+      c.code.toLowerCase().includes(q) ||
+      c.instructor.toLowerCase().includes(q) ||
+      c.department.toLowerCase().includes(q) ||
+      c.letterGrade.toLowerCase() === q ||
+      c.academicSession.toLowerCase().includes(q);
+    if (!matchSearch) return false;
+    if (completedSemesterFilter !== 'all' && c.semester !== Number(completedSemesterFilter)) return false;
+    return true;
+  });
+
+  const filteredFailedCourses = FAILED_COURSES.filter(c => {
+    const q = courseSearchQuery.toLowerCase().trim();
+    const matchSearch = !q ||
+      c.title.toLowerCase().includes(q) ||
+      c.code.toLowerCase().includes(q) ||
+      c.instructor.toLowerCase().includes(q) ||
+      c.department.toLowerCase().includes(q) ||
+      c.failureReason.toLowerCase().includes(q) ||
+      c.eligibleSession.toLowerCase().includes(q);
+    return matchSearch;
+  });
+
+  const filteredCourses = filteredCurrentCourses;
 
   const filteredAssignments = assignmentsList.filter(a => {
     if (assignmentFilter === 'All') return true;
@@ -1028,399 +1087,18 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           TAB 2: LUMS SAKAI DEDICATED COURSE LEARNING WORKSPACE
          ========================================================= */}
       {activeTab === 'courses' && (
-        <div className="space-y-4">
-          {/* Course Banner (Top Header of Course Workspace) */}
-          <div className="bg-white border border-[#d8dadb] rounded-2xl overflow-hidden shadow-2xs">
-            <div className="p-4 sm:p-6 bg-gradient-to-r from-[#004b87] via-[#005a9e] to-[#0068b5] text-white flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs font-bold text-white bg-[#84a433] px-2.5 py-0.5 rounded-md">
-                    {selectedCourse.code}
-                  </span>
-                  <span className="text-xs text-slate-100">
-                    Semester 7 Core · {selectedCourse.creditHours} Credit Hours
-                  </span>
-                </div>
-                <h2 className="text-lg sm:text-2xl font-bold text-white tracking-tight">
-                  {selectedCourse.title}
-                </h2>
-                <div className="text-xs text-slate-200 flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <span>Instructor: <strong className="text-white">{selectedCourse.instructor}</strong></span>
-                  <span className="text-white/40" aria-hidden="true">·</span>
-                  <span>{selectedCourse.schedule}</span>
-                  <span className="text-white/40" aria-hidden="true">·</span>
-                  <span>{selectedCourse.classroom}</span>
-                </div>
-              </div>
-
-              {/* Quick Instructor Actions */}
-              <div className="flex flex-wrap items-center gap-2 shrink-0">
-                <button
-                  onClick={() => setShowOfficeHoursModal(true)}
-                  className="min-h-[38px] px-3 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/25 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
-                >
-                  <Mail className="w-3.5 h-3.5" />
-                  <span>Office Hours</span>
-                </button>
-                <button
-                  onClick={() => triggerToast(`Full syllabus & lecture pack for ${selectedCourse.code} downloaded (.ZIP).`)}
-                  className="min-h-[38px] px-3.5 py-2 bg-[#84a433] hover:bg-[#739129] text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  <span>Course Pack</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Two-Pane Architecture: Horizontal Swipeable Pill Bar on Mobile + Left Sidebar on Desktop */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
-            {/* Course Tool Navigation Palette */}
-            <aside
-              onTouchStart={courseToolSwipe.onTouchStart}
-              onTouchEnd={courseToolSwipe.onTouchEnd}
-              className="lg:col-span-3 bg-white border border-[#d8dadb] rounded-2xl p-2 lg:p-2.5 lg:space-y-1 h-fit shadow-2xs select-none"
-            >
-              <div className="hidden lg:block px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
-                Course Tools
-              </div>
-
-              <div
-                ref={courseToolScrollRef}
-                className="flex lg:flex-col items-center lg:items-stretch gap-1.5 lg:gap-1 overflow-x-auto no-scrollbar"
-              >
-                {[
-                  { id: 'modules', label: 'Lessons (1–16)', icon: <BookOpen className="w-4 h-4 shrink-0" /> },
-                  { id: 'syllabus', label: 'Syllabus & OBE', icon: <FileText className="w-4 h-4 shrink-0" /> },
-                  { id: 'assignments', label: 'Assignments', icon: <CheckSquare className="w-4 h-4 shrink-0" />, count: selectedCourse.assignmentsCount },
-                  { id: 'gradebook', label: 'Gradebook', icon: <FileSpreadsheet className="w-4 h-4 shrink-0" /> },
-                  { id: 'attendance', label: 'Attendance', icon: <Clock className="w-4 h-4 shrink-0" /> },
-                  { id: 'resources', label: 'Resources', icon: <FolderOpen className="w-4 h-4 shrink-0" />, count: selectedCourse.materialsCount },
-                  { id: 'roster', label: 'Class Roster', icon: <Users className="w-4 h-4 shrink-0" /> }
-                ].map(tool => {
-                  const isCurrent = courseTool === tool.id;
-                  return (
-                    <button
-                      key={tool.id}
-                      data-nav-id={tool.id}
-                      onClick={() => setCourseTool(tool.id as any)}
-                      className={`min-h-[38px] lg:w-full flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
-                        isCurrent
-                          ? 'bg-[#0068b5] text-white shadow-2xs font-bold'
-                          : 'bg-[#f4f6f8] lg:bg-transparent text-slate-700 hover:text-slate-900 hover:bg-slate-100'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        {tool.icon}
-                        <span>{tool.label}</span>
-                      </div>
-                      {tool.count !== undefined && (
-                        <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-bold ${
-                          isCurrent ? 'bg-white/20 text-white' : 'bg-white lg:bg-slate-100 text-slate-600'
-                        }`}>
-                          {tool.count}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </aside>
-
-            {/* Right Main Tool Viewport (Supports Swipe Left/Right Between Course Tools) */}
-            <main
-              onTouchStart={courseToolSwipe.onTouchStart}
-              onTouchEnd={courseToolSwipe.onTouchEnd}
-              className="lg:col-span-9 bg-white border border-[#d8dadb] rounded-2xl p-4 sm:p-6 space-y-5 shadow-2xs min-h-[420px]"
-            >
-              {/* TOOL: LESSONS & MODULES */}
-              {courseTool === 'modules' && (
-                <div className="space-y-5">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <div>
-                      <h3 className="text-base font-bold text-slate-900">Weekly Lessons & Lecture Modules</h3>
-                      <p className="text-xs text-slate-500">
-                        Progress through syllabus milestones. Check items as completed to track readiness.
-                      </p>
-                    </div>
-                    <span className="text-xs font-mono text-slate-600 bg-slate-50 px-3 py-1 rounded-lg border border-slate-200">
-                      16-Week Academic Plan
-                    </span>
-                  </div>
-
-                  {/* Modules Accordion Component */}
-                  <CourseWeeklyModules course={selectedCourse} />
-                </div>
-              )}
-
-              {/* TOOL: SYLLABUS & OUTCOMES */}
-              {courseTool === 'syllabus' && (
-                <div className="space-y-5">
-                  <div className="border-b border-slate-100 pb-3">
-                    <h3 className="text-base font-bold text-slate-900">Course Syllabus & Description</h3>
-                    <p className="text-xs text-slate-500">Official curriculum approved by the Board of Studies, University of Sindh.</p>
-                  </div>
-
-                  <div className="space-y-4 text-xs text-slate-700 leading-relaxed">
-                    <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
-                      <h4 className="font-bold text-slate-900 text-xs mb-1 uppercase tracking-wider text-blue-900">
-                        Course Overview & Scope
-                      </h4>
-                      <p>{selectedCourse.syllabus}</p>
-                    </div>
-
-                    <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                      <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider text-blue-900">
-                        Outcome-Based Education (OBE) Learning Outcomes (CLOs)
-                      </h4>
-                      <div className="space-y-1.5 font-sans">
-                        <div className="flex items-start gap-2">
-                          <span className="font-mono font-bold text-blue-700 shrink-0">CLO-1:</span>
-                          <span>Analyze enterprise business requirements and formalize microservices architectural boundaries (Bloom's Taxonomy: C4 - Analysis).</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="font-mono font-bold text-blue-700 shrink-0">CLO-2:</span>
-                          <span>Design scalable distributed software systems adhering to Clean Architecture & DDD principles (Bloom's Taxonomy: C5 - Synthesis).</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="font-mono font-bold text-blue-700 shrink-0">CLO-3:</span>
-                          <span>Conduct automated regression testing and architectural compliance audits in continuous integration pipelines (Bloom's Taxonomy: C5 - Evaluation).</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
-                      <h4 className="font-bold text-slate-900 text-xs mb-1 uppercase tracking-wider text-blue-900">
-                        Recommended Textbooks & References
-                      </h4>
-                      <ul className="list-disc list-inside space-y-1 text-slate-600">
-                        <li>Software Architecture in Practice (4th Edition) — Len Bass, Paul Clements, Rick Kazman</li>
-                        <li>Clean Architecture: A Craftsman's Guide to Software Structure — Robert C. Martin</li>
-                        <li>Designing Data-Intensive Applications — Martin Kleppmann (O'Reilly)</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TOOL: ASSIGNMENTS */}
-              {courseTool === 'assignments' && (
-                <div className="space-y-5">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <div>
-                      <h3 className="text-base font-bold text-slate-900">Course Assignments & Lab Tasks</h3>
-                      <p className="text-xs text-slate-500">Deliverables assigned for {selectedCourse.code}.</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    {assignmentsList
-                      .filter(a => a.courseCode === selectedCourse.code)
-                      .map(asg => (
-                        <div key={asg.id} className="p-4 border border-slate-200 rounded-xl space-y-2 text-xs">
-                          <div className="flex items-center justify-between">
-                            <h4 className="font-bold text-slate-900 text-sm">{asg.title}</h4>
-                            <span className={`px-2 py-0.5 rounded font-bold ${
-                              asg.status === 'Graded' ? 'bg-emerald-100 text-emerald-800' :
-                              asg.status === 'Submitted' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'
-                            }`}>
-                              {asg.status}
-                            </span>
-                          </div>
-                          <p className="text-slate-600 leading-relaxed">{asg.description}</p>
-                          <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px]">
-                            <span className="text-slate-400 font-mono">Due: {asg.dueDate} · {asg.totalMarks} Marks</span>
-                            {asg.status === 'Pending' ? (
-                              <button
-                                onClick={() => setSubmittingAssignmentId(asg.id)}
-                                className="px-3 py-1 bg-[#0b2545] hover:bg-blue-900 text-white rounded font-bold cursor-pointer"
-                              >
-                                Submit Assignment
-                              </button>
-                            ) : (
-                              <span className="text-emerald-700 font-semibold flex items-center gap-1">
-                                <CheckCircle2 className="w-3.5 h-3.5" />
-                                <span>Turnitin Cleared (2.1%)</span>
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              )}
-
-              {/* TOOL: GRADEBOOK */}
-              {courseTool === 'gradebook' && (
-                <div className="space-y-5">
-                  <div className="border-b border-slate-100 pb-3">
-                    <h3 className="text-base font-bold text-slate-900">Course Gradebook & Assessment Breakdown</h3>
-                    <p className="text-xs text-slate-500">Weighting components and scores for {selectedCourse.code}.</p>
-                  </div>
-
-                  <table className="w-full text-xs text-left">
-                    <thead className="bg-slate-50 text-slate-500 border-b border-slate-200">
-                      <tr>
-                        <th className="py-2.5 px-3">Component</th>
-                        <th className="py-2.5 px-3">Weight</th>
-                        <th className="py-2.5 px-3">Max Marks</th>
-                        <th className="py-2.5 px-3">Score Obtained</th>
-                        <th className="py-2.5 px-3">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 font-mono">
-                      <tr>
-                        <td className="py-2.5 px-3 font-sans font-medium text-slate-800">Quizzes & Continuous MCQs</td>
-                        <td className="py-2.5 px-3">15%</td>
-                        <td className="py-2.5 px-3">15</td>
-                        <td className="py-2.5 px-3 font-bold text-[#0b2545]">13.5</td>
-                        <td className="py-2.5 px-3 text-emerald-700 font-sans font-semibold">Evaluated</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 px-3 font-sans font-medium text-slate-800">Assignments & Lab Dockets</td>
-                        <td className="py-2.5 px-3">15%</td>
-                        <td className="py-2.5 px-3">15</td>
-                        <td className="py-2.5 px-3 font-bold text-[#0b2545]">14.0</td>
-                        <td className="py-2.5 px-3 text-emerald-700 font-sans font-semibold">Evaluated</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 px-3 font-sans font-medium text-slate-800">Midterm Examination</td>
-                        <td className="py-2.5 px-3">30%</td>
-                        <td className="py-2.5 px-3">30</td>
-                        <td className="py-2.5 px-3 font-bold text-[#0b2545]">27.0</td>
-                        <td className="py-2.5 px-3 text-emerald-700 font-sans font-semibold">Evaluated</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 px-3 font-sans font-medium text-slate-800">Final Term Examination</td>
-                        <td className="py-2.5 px-3">40%</td>
-                        <td className="py-2.5 px-3">40</td>
-                        <td className="py-2.5 px-3 text-slate-400">—</td>
-                        <td className="py-2.5 px-3 text-amber-700 font-sans font-semibold">Scheduled (Hall Slip Ready)</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              )}
-
-              {/* TOOL: ATTENDANCE */}
-              {courseTool === 'attendance' && (
-                <div className="space-y-5">
-                  <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
-                    <div>
-                      <h3 className="text-base font-bold text-slate-900">Lecture Attendance Log — {selectedCourse.code}</h3>
-                      <p className="text-xs text-slate-500">Official log maintained under University of Sindh Examination Ordinance.</p>
-                    </div>
-                    <span className="text-xs font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded">
-                      {selectedCourse.attendancePercent}% (Safe)
-                    </span>
-                  </div>
-
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-xs text-left">
-                      <thead className="bg-slate-50 text-slate-500 border-b border-slate-200">
-                        <tr>
-                          <th className="py-2 px-3">Date</th>
-                          <th className="py-2 px-3">Lecture Topic</th>
-                          <th className="py-2 px-3">Status</th>
-                          <th className="py-2 px-3">Marked By</th>
-                          <th className="py-2 px-3 font-mono">Timestamp</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {ATTENDANCE_HISTORY
-                          .filter(a => a.courseCode === selectedCourse.code)
-                          .map((rec, i) => (
-                            <tr key={i} className="hover:bg-slate-50">
-                              <td className="py-2.5 px-3 font-mono text-slate-600">{rec.date}</td>
-                              <td className="py-2.5 px-3 text-slate-800">{rec.topic}</td>
-                              <td className="py-2.5 px-3">
-                                <span className={`font-semibold ${
-                                  rec.status === 'Present' ? 'text-emerald-700' : 'text-rose-700'
-                                }`}>
-                                  {rec.status === 'Present' ? '● Present' : '✕ Absent'}
-                                </span>
-                              </td>
-                              <td className="py-2.5 px-3 text-slate-600">{rec.markedBy}</td>
-                              <td className="py-2.5 px-3 font-mono text-slate-400 text-[11px]">{rec.timestamp}</td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-
-              {/* TOOL: RESOURCES */}
-              {courseTool === 'resources' && (
-                <div className="space-y-5">
-                  <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
-                    <div>
-                      <h3 className="text-base font-bold text-slate-900">Course Resources & File Vault</h3>
-                      <p className="text-xs text-slate-500">Lecture slides, code packages, and supplementary readings.</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2.5 text-xs">
-                    {[
-                      { name: 'Lecture 01-04 Slide Deck (Foundations).pdf', size: '14.2 MB', date: 'Sep 10, 2026' },
-                      { name: 'Microservices Clean Architecture Reference Code.zip', size: '8.4 MB', date: 'Sep 24, 2026' },
-                      { name: 'Domain Driven Design Tactical Patterns.pdf', size: '4.8 MB', date: 'Oct 02, 2026' },
-                      { name: 'Midterm Past Papers & Solution Key.pdf', size: '2.1 MB', date: 'Oct 05, 2026' }
-                    ].map((file, i) => (
-                      <div key={i} className="p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between">
-                        <div className="flex items-center gap-2.5">
-                          <FileText className="w-4 h-4 text-blue-700" />
-                          <div>
-                            <span className="font-semibold text-slate-900 block">{file.name}</span>
-                            <span className="text-[10px] text-slate-400 font-mono">{file.size} · Uploaded {file.date}</span>
-                          </div>
-                        </div>
-                        <button
-                          onClick={() => triggerToast(`Downloaded ${file.name} from LMS Vault.`)}
-                          className="px-2.5 py-1 text-slate-700 hover:text-slate-900 hover:bg-slate-200 rounded font-bold cursor-pointer flex items-center gap-1"
-                        >
-                          <Download className="w-3.5 h-3.5" />
-                          <span>Download</span>
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* TOOL: ROSTER & DISCUSSION */}
-              {courseTool === 'roster' && (
-                <div className="space-y-5">
-                  <div className="border-b border-slate-100 pb-3">
-                    <h3 className="text-base font-bold text-slate-900">Enrolled Student Cohort & Study Forum</h3>
-                    <p className="text-xs text-slate-500">BS Software Engineering (2K23 Batch) cohort enrolled in {selectedCourse.code}.</p>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                    {[
-                      { roll: '2K23/SWE/104', name: 'Ali Hassan Chand (You)', email: 'ali.hassan23@usindh.edu.pk' },
-                      { roll: '2K23/SWE/045', name: 'Abdul Hannan Memon', email: 'abdul.hannan23@usindh.edu.pk' },
-                      { roll: '2K23/SWE/078', name: 'Haris Ahmed Ansari', email: 'haris.ansari23@usindh.edu.pk' },
-                      { roll: '2K23/SWE/101', name: 'Abdul Samad', email: 'abdul.swe23@usindh.edu.pk' },
-                      { roll: '2K23/SWE/102', name: 'Areeba Shaikh', email: 'areeba.swe23@usindh.edu.pk' },
-                      { roll: '2K23/SWE/105', name: 'Dua Memon', email: 'dua.swe23@usindh.edu.pk' }
-                    ].map((peer, i) => (
-                      <div key={i} className="p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-900 font-bold flex items-center justify-center font-mono text-xs">
-                          {peer.name.slice(0, 2).toUpperCase()}
-                        </div>
-                        <div>
-                          <strong className="text-slate-900 block">{peer.name}</strong>
-                          <span className="text-[11px] font-mono text-slate-500">{peer.roll}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </main>
-          </div>
-        </div>
+        <CoursesPortalView
+          enrolledCourses={ENROLLED_COURSES}
+          completedCourses={COMPLETED_COURSES}
+          failedCourses={FAILED_COURSES}
+          selectedCourseCode={selectedCourseCode}
+          onSelectCourseCode={setSelectedCourseCode}
+          assignmentsList={assignmentsList}
+          onOpenAssignmentSubmit={(id) => setSubmittingAssignmentId(id)}
+          onOpenOfficeHours={() => setShowOfficeHoursModal(true)}
+          onToast={triggerToast}
+          activeSubTab={activeSubTab}
+        />
       )}
 
       {/* =========================================================
